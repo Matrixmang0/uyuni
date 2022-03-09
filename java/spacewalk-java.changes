@@ -1,3 +1,4 @@
+- Redefine available power_management.types for cobbler >= 3.3.1
 - Clean grub2 reinstall entry in autoyast snippet (bsc#1199950)
 - Show reboot alert message on all system detail pages (bsc#1199779)
 - Show patch as installed in CVE Audit even if successor patch affects
@@ -56,7 +57,7 @@ Thu May 26 12:30:12 CEST 2022 - jgonzalez@suse.com
 Thu May 26 09:27:43 CEST 2022 - jgonzalez@suse.com
 
 - version 4.3.28-1
-  * During re-activation, recalculate grains if 
+  * During re-activation, recalculate grains if
     contact method has been changed (bsc#1199677)
   * autoinstallation: missing whitespace after install URL (bsc#1199888)
 
