@@ -30,67 +30,67 @@ import java.util.Set;
  */
 public class SystemRecord extends CobblerObject {
     /**
-     * TODO
+     * Constant to define the field name for hostname of a System
      */
     private static final String HOSTNAME = "hostname";
     /**
-     * TODO
+     * Constant to define the field name for name servers of a System
      */
     private static final String NAME_SERVERS = "name_servers";
     /**
-     * TODO
+     * Constant to define the field name for the gateway of a System
      */
     private static final String GATEWAY = "gateway";
     /**
-     * TODO
+     * Constant to define the field name for the profile of a System
      */
     private static final String PROFILE = "profile";
     /**
-     * TODO
+     * Constant to define the field name for the server of a System
      */
     private static final String SERVER = "server";
     /**
-     * TODO
+     * Constant to define the field name for the virtual bridge of a System
      */
     private static final String VIRT_BRIDGE = "virt_bridge";
     /**
-     * TODO
+     * Constant to define the field name for the virtual CPUs of a System
      */
     private static final String VIRT_CPUS = "virt_cpus";
     /**
-     * TODO
+     * Constant to define the field name for the virtual machine type of a System
      */
     private static final String VIRT_TYPE = "virt_type";
     /**
-     * TODO
+     * Constant to define the field name for the path to the VM image of a System
      */
     private static final String VIRT_PATH = "virt_path";
     /**
-     * TODO
+     * Constant to define the field name for the virtual machine image size of a System
      */
     private static final String VIRT_FILE_SIZE = "virt_file_size";
     /**
-     * TODO
+     * Constant to define the field name for the virtual RAM of a System
      */
     private static final String VIRT_RAM = "virt_ram";
     /**
-     * TODO
+     * Constant to define the field name for the enabled netboot of a System
      */
     private static final String NETBOOT_ENABLED = "netboot_enabled";
     /**
-     * TODO
+     * Constant to define the field name for the redhat management server of a System
      */
     public static final String REDHAT_MGMT_SERVER = "redhat_management_server";
     /**
-     * TODO
+     * Constant to define the field name for the setter of the interfaces of a System
      */
     private static final String SET_INTERFACES = "modify_interface";
     /**
-     * TODO
+     * Constant to define the field name for the getter of the interfaces of a System
      */
     private static final String GET_INTERFACES = "interface";
     /**
-     * TODO
+     * Constant to define the field name for the ipv6 autoconfiguration of a System
      */
     private static final String IPV6_AUTOCONF = "ipv6_autoconfiguration";
     /**
@@ -374,42 +374,60 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
+     * Getter for the virtual bridge property.
+     *
      * @return the VirtBridge
+     * @cobbler.inheritable TODO
      */
     public String getVirtBridge() {
         return (String) dataMap.get(VIRT_BRIDGE);
     }
 
     /**
+     * Getter for the virtual CPU cores property.
+     *
      * @return the VirtCpus
+     * @cobbler.inheritable TODO
      */
     public int getVirtCpus() {
         return (Integer) dataMap.get(VIRT_CPUS);
     }
 
     /**
+     * Getter for the type of VM property.
+     *
      * @return the VirtType
+     * @cobbler.inheritable TODO
      */
     public String getVirtType() {
         return (String) dataMap.get(VIRT_TYPE);
     }
 
     /**
+     * Getter for the virtual disk location property
+     *
      * @return the VirtPath
+     * @cobbler.inheritable TODO
      */
     public String getVirtPath() {
         return (String) dataMap.get(VIRT_PATH);
     }
 
     /**
+     * Getter for the virtual disk size property
+     *
      * @return the VirtFileSize
+     * @cobbler.inheritable TODO
      */
     public int getVirtFileSize() {
         return (Integer) dataMap.get(VIRT_FILE_SIZE);
     }
 
     /**
+     * Getter for the virtual RAM property
+     *
      * @return the VirtRam
+     * @cobbler.inheritable TODO
      */
     public int getVirtRam() {
         return (Integer) dataMap.get(VIRT_RAM);
@@ -479,6 +497,7 @@ public class SystemRecord extends CobblerObject {
 
     /**
      * @param nameServersIn the NameServers
+     * @cobbler.inheritable TODO
      */
     public void setNameServers(List<String> nameServersIn) {
         modify(NAME_SERVERS, nameServersIn);
@@ -532,6 +551,16 @@ public class SystemRecord extends CobblerObject {
      */
     public void setImage(String imageName) {
         modify(IMAGE, imageName);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     * @cobbler.inheritable TODO
+     */
+    public String getServer() {
+        return (String) dataMap.get(SERVER);
     }
 
     /**
@@ -669,7 +698,7 @@ public class SystemRecord extends CobblerObject {
      * Sets an additional ID for this system's power management system. The ID
      * is usually a type-specific identifier for the system or port to be
      * managed (eg. plug number on WTI, blade id on DRAC, etc.). See
-     * https://github.com/cobbler/cobbler/wiki/Power%20Management
+     * <a href="https://cobbler.readthedocs.io/en/latest/user-guide.html#power-management">in the Cobbler Wiki</a>
      *
      * @param powerId the ID
      */
