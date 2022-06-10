@@ -14,5 +14,245 @@
  */
 package org.cobbler.test;
 
+import static org.junit.Assert.fail;
+
+import org.cobbler.Distro;
+import org.cobbler.Profile;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class ProfileTest {
+
+    private Distro testDistro;
+    private MockConnection connectionMock;
+
+    @BeforeEach
+    public void setUp() {
+        String distroName = "testProfileTest";
+        connectionMock = new MockConnection("http://localhost", "token");
+        testDistro = new Distro.Builder().setName(distroName).build(connectionMock);
+    }
+
+    @AfterEach
+    public void teardown() {
+        testDistro = null;
+        MockConnection.clear();
+    }
+
+    @Test
+    public void testDhcpTag() {
+        // Arrange
+        String profileName = "dhcpTag";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "dhcp tag";
+
+        // Act
+        testProfile.setDhcpTag(expectedResult);
+        String result = testProfile.getDhcpTag();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testKickstart() {
+        // Arrange
+        String profileName = "autoinstall";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "/var/lib/cobbler/templates/dhcp_tag";
+
+        // Act
+        testProfile.setKickstart("dhcp_tag");
+        String result = testProfile.getKickstart();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVirtBridge() {
+        // Arrange
+        String profileName = "virtBridge";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "my_bridge";
+
+        // Act
+        testProfile.setVirtBridge(expectedResult);
+        String result = testProfile.getVirtBridge();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVirtCpus() {
+        // Arrange
+        String profileName = "virtCpus";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        int expectedResult = 64;
+
+        // Act
+        testProfile.setVirtCpus(expectedResult);
+        int result = testProfile.getVirtCpus();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVirtType() {
+        // Arrange
+        String profileName = "virtType";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "test";
+
+        // Act
+        testProfile.setVirtType(expectedResult);
+        String result = testProfile.getVirtType();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testGetRepos() {
+        // Arrange
+        String profileName = "getRepos";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        List<String> expectedResult = Arrays.asList("test", "test");
+
+        // Act
+        testProfile.setRepos(expectedResult);
+        List<String> result = testProfile.getRepos();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVirtPath() {
+        // Arrange
+        String profileName = "virtPath";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "test";
+
+        // Act
+        testProfile.setVirtPath(expectedResult);
+        String result = testProfile.getVirtPath();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testServer() {
+        // Arrange
+        String profileName = "server";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "test";
+
+        // Act
+        testProfile.setServer(expectedResult);
+        String result = testProfile.getServer();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Disabled("Nameservers don't have a setter at the moment.")
+    @Test
+    public void testNameServers() {
+        // Arrange
+        String profileName = "nameServers";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "test";
+
+        // Act
+        testProfile.setName(expectedResult);
+        String result = testProfile.getNameServers();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testMenuEnabled() {
+        // Arrange
+        String profileName = "menuEnabled";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        boolean expectedResult = true;
+
+        // Act
+        testProfile.setEnableMenu(expectedResult);
+        boolean result = testProfile.menuEnabled();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVirtFileSize() {
+        // Arrange
+        String profileName = "virtFileSize";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        double expectedResult = 5.0;
+
+        // Act
+        testProfile.setVirtFileSize(expectedResult);
+        double result = testProfile.getVirtFileSize();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVirtRam() {
+        // Arrange
+        String profileName = "virtRam";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        int expectedResult = 5;
+
+        // Act
+        testProfile.setVirtRam(expectedResult);
+        int result = testProfile.getVirtRam();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Disabled("Method under test is broken by client side implementation.")
+    @Test
+    public void testGenerateKickstart() {
+        // Arrange
+        String profileName = "generateKickstart";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "";
+
+        // Act
+        String result = testProfile.generateKickstart();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testSyncRedHatManagementKeys() {
+        // Arrange
+        String profileName = "syncRedHatManagementKeys";
+        Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
+        String expectedResult = "test2,test1";
+
+        // Act
+        testProfile.syncRedHatManagementKeys(null, Arrays.asList("test1", "test2"));
+        String result = testProfile.getRedHatManagementKey();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
 }

@@ -14,5 +14,230 @@
  */
 package org.cobbler.test;
 
+import org.cobbler.Network;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class NetworkTest {
+
+    private MockConnection mockConnection;
+
+    @BeforeEach
+    public void setUp() {
+        mockConnection = new MockConnection("http://localhost", "token");
+    }
+
+    @AfterEach
+    public void teardown() {
+        MockConnection.clear();
+    }
+
+    @Test
+    public void testNetworkConstructor() {
+        // Arrange
+        String interfaceName = "eth0";
+
+        // Act
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Assert: If no exception is raised this is enough
+    }
+
+    @Test
+    public void testName() {
+        // Arrange
+        String interfaceName = "eth0";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        String result = network.getName();
+
+        // Assert
+        Assertions.assertEquals(interfaceName, result);
+    }
+
+    @Test
+    public void testNetmask() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setNetmask(expectedResult);
+        String result = network.getNetmask();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testIpAddress() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setIpAddress(expectedResult);
+        String result = network.getIpAddress();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testIpv6Address() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setIpv6Address(expectedResult);
+        String result = network.getIpv6Address();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testDnsName() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setDnsname(expectedResult);
+        String result = network.getDnsname();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testIpv6Secondaries() {
+        // Arrange
+        String interfaceName = "eth0";
+        List<String> expectedResult = Arrays.asList("TODO", "second element");
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setIpv6Secondaries(expectedResult);
+        List<String> result = network.getIpv6Secondaries();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testIsStaticNetwork() {
+        // Arrange
+        String interfaceName = "eth0";
+        boolean expectedResult = true;
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setStaticNetwork(expectedResult);
+        boolean result = network.isStaticNetwork();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testMacAddress() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setMacAddress(expectedResult);
+        String result = network.getMacAddress();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testBondingMaster() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setBondingMaster(expectedResult);
+        String result = network.getBondingMaster();
+
+                // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testBondingOptions() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "TODO";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.setBondingOptions(expectedResult);
+        String result = network.getBondingOptions();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testMakeBondingMaster() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "bond";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.makeBondingMaster();
+        String result = network.getBonding();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testMakeBondingSlave() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "bond_slave";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.makeBondingSlave();
+        String result = network.getBonding();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testMakeBondingNa() {
+        // Arrange
+        String interfaceName = "eth0";
+        String expectedResult = "na";
+        Network network = new Network(mockConnection, interfaceName);
+
+        // Act
+        network.makeBondingNA();
+        String result = network.getBonding();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
+    }
 }
