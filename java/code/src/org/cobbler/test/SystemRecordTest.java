@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Tests SystemRecord.
@@ -59,7 +60,7 @@ public class SystemRecordTest {
                 .setName("test-distro")
                 .setKernel("kernel")
                 .setInitrd("initrd")
-                .setKsmeta(new HashMap<>())
+                .setKsmeta(Optional.empty())
                 .setBreed("redhat")
                 .setOsVersion("rhel6")
                 .setArch("x86_64")

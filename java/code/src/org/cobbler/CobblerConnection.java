@@ -105,10 +105,11 @@ public class CobblerConnection {
     }
 
     /**
-     * TODO
+     * This constructor creates the connection but does not authentication
+     * against the Cobbler server.
      *
-     * @param urlIn TODO
-     * @param clientIn TODO
+     * @param urlIn cobbler base url, example {@code http://localhost}
+     * @param clientIn The XML-RPC Client that will be used to connect to Cobbler.
      */
     public CobblerConnection(String urlIn, XmlRpcInvocationHandler clientIn) {
         client = clientIn;

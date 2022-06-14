@@ -110,9 +110,15 @@ public class Image extends CobblerObject {
             .invokeMethod("get_images");
 
         for (Map<String, Object> imageMap : imageMaps) {
-            Image distro = new Image(client);
-            distro.dataMap = imageMap;
-            result.add(distro);
+            Image image = new Image(client);
+            image.dataMap = imageMap;
+            image.dataMapResolved = (Map<String, Object>) client.invokeMethod(
+                    "get_image",
+                    image.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
+            result.add(image);
         }
         return result;
     }
@@ -123,11 +129,18 @@ public class Image extends CobblerObject {
      * @param imageMap the image map
      * @return the image
      */
+    @SuppressWarnings("unchecked")
     private static Image handleLookup(CobblerConnection client,
         Map<String, Object> imageMap) {
         if (imageMap != null) {
             Image image = new Image(client);
             image.dataMap = imageMap;
+            image.dataMapResolved = (Map<String, Object>) client.invokeMethod(
+                    "get_image",
+                    image.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
             return image;
         }
         return null;
@@ -180,7 +193,7 @@ public class Image extends CobblerObject {
      */
     @Override
     protected void invokeModifyResolved(String key, Object value) {
-        // TODO
+        client.invokeTokenMethod("set_item_resolved_value", getUid(), key, value);
     }
 
     /**
@@ -214,6 +227,7 @@ public class Image extends CobblerObject {
     protected void reload() {
         Image newImage = lookupById(client, getId());
         dataMap = newImage.dataMap;
+        dataMapResolved = newImage.dataMapResolved;
     }
 
     /**

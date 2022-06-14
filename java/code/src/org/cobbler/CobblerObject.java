@@ -264,6 +264,36 @@ public abstract class CobblerObject {
     }
 
     /**
+     * TODO
+     *
+     * @param key TODO
+     * @param valueIn TODO
+     * @param <T> TODO
+     */
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected <T> void modifyRawHelper(String key, Optional<T> valueIn) {
+        if (valueIn.isEmpty()) {
+            modify(key, INHERIT_KEY);
+            return;
+        }
+        modify(key, valueIn);
+    }
+
+    /**
+     * TODO
+     *
+     * @param key
+     * @param <T>
+     */
+    @SuppressWarnings("unchecked")
+    protected <T> Optional<T> retrieveOptionalValue(String key) {
+        if (String.valueOf(dataMap.get(key)).equals(INHERIT_KEY)) {
+            return Optional.empty();
+        }
+        return Optional.of((T) dataMap.get(key));
+    }
+
+    /**
      * Gets the XML-RPC handle internal to Cobbler
      *
      * @return The handle for Cobbler. If the Item is not saved to disk it will be prefixed with {@code ___NEW___}.
@@ -286,6 +316,8 @@ public abstract class CobblerObject {
     protected void modify(String key, Object value) {
         invokeModify(key, value);
         dataMap.put(key, value);
+        Object resolvedValue = client.invokeMethod("get_item_resolved_value", getUid(), key);
+        dataMapResolved.put(key, resolvedValue);
     }
 
     /**
@@ -351,10 +383,7 @@ public abstract class CobblerObject {
      */
     @SuppressWarnings("unchecked")
     public Optional<List<String>> getManagementClasses() {
-        if (String.valueOf(dataMap.get(MGMT_CLASSES)).equals(INHERIT_KEY)) {
-            return Optional.empty();
-        }
-        return Optional.of((List<String>) dataMap.get(MGMT_CLASSES));
+        return this.<List<String>>retrieveOptionalValue(MGMT_CLASSES);
     }
 
     /**
@@ -374,11 +403,7 @@ public abstract class CobblerObject {
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setManagementClasses(Optional<List<String>> managementClassesIn) {
-        if (managementClassesIn.isEmpty()) {
-            modify(MGMT_CLASSES, INHERIT_KEY);
-            return;
-        }
-        modify(MGMT_CLASSES, managementClassesIn);
+        this.<List<String>>modifyRawHelper(MGMT_CLASSES, managementClassesIn);
     }
 
     /**
@@ -467,9 +492,8 @@ public abstract class CobblerObject {
      *                      and thus has an accompanying resolved method
      *                      {@link #getResolvedOwners()}.
      */
-    @SuppressWarnings("unchecked")
-    public List<String> getOwners() {
-        return (List<String>) dataMap.get(OWNERS);
+    public Optional<List<String>> getOwners() {
+        return this.<List<String>>retrieveOptionalValue(OWNERS);
     }
 
     /**
@@ -490,8 +514,9 @@ public abstract class CobblerObject {
      *                      and thus has an accompanying resolved method
      *                      {@link #setResolvedOwners(List)} ()}.
      */
-    public void setOwners(List<String> ownersIn) {
-        modify(OWNERS, ownersIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setOwners(Optional<List<String>> ownersIn) {
+        this.<List<String>>modifyRawHelper(OWNERS, ownersIn);
     }
 
     /**
@@ -570,13 +595,8 @@ public abstract class CobblerObject {
      * @return the kernelOptions
      * @cobbler.inheritable TODO
      */
-    @SuppressWarnings("unchecked")
-    public String getKernelOptions() {
-        Object kernelOpts = dataMap.get(KERNEL_OPTIONS);
-        if (kernelOpts instanceof Map) {
-            return convertOptionsMap((Map<String, Object>) kernelOpts);
-        }
-        return (String) kernelOpts;
+    public Optional<Map<String, Object>> getKernelOptions() {
+        return this.<Map<String, Object>>retrieveOptionalValue(KERNEL_OPTIONS);
     }
 
     /**
@@ -597,13 +617,8 @@ public abstract class CobblerObject {
      * @return the kernelOptionsPost
      * @cobbler.inheritable TODO
      */
-    @SuppressWarnings("unchecked")
-    public String getKernelOptionsPost() {
-        Object kernelOptsPost = dataMap.get(KERNEL_OPTIONS_POST);
-        if (kernelOptsPost instanceof Map) {
-            return convertOptionsMap((Map<String, Object>) kernelOptsPost);
-        }
-        return (String) kernelOptsPost;
+    public Optional<Map<String, Object>> getKernelOptionsPost() {
+        return this.<Map<String, Object>>retrieveOptionalValue(KERNEL_OPTIONS_POST);
     }
 
     /**
@@ -619,14 +634,13 @@ public abstract class CobblerObject {
     }
 
     /**
-     * Converts a Java Map to a String that can be understood by Cobbler and
-     * then be converted to a Dictionary.
+     * Converts a Java Map to a String that can be understood by Cobbler and then be converted to a Dictionary.
      *
      * @param map The map to convert
      * @return The intended String
      */
     @SuppressWarnings("unchecked")
-    private String convertOptionsMap(Map<String, Object> map) {
+    public String convertOptionsMap(Map<String, Object> map) {
         StringBuilder string = new StringBuilder();
         for (String key : map.keySet()) {
             List<String> keyList;
@@ -649,23 +663,37 @@ public abstract class CobblerObject {
         return string.toString();
     }
 
-
     /**
      * Setter for the kernel options
      *
      * @param kernelOptionsIn the kernelOptions to set
+     * @param <T> The type you want to use for the kernel options. Must be either a {@code String} or
+     *            {@code Map<String, Objet>}.
      */
-    public void setKernelOptions(String kernelOptionsIn) {
-        modify(SET_KERNEL_OPTIONS, kernelOptionsIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public <T> void setKernelOptions(Optional<T> kernelOptionsIn) {
+        if (kernelOptionsIn.isEmpty()) {
+            modify(SET_KERNEL_OPTIONS, INHERIT_KEY);
+            return;
+        }
+        T kernelOptionsValue = kernelOptionsIn.get();
+        if (kernelOptionsValue instanceof String || kernelOptionsValue instanceof Map) {
+            modify(SET_KERNEL_OPTIONS, kernelOptionsValue);
+        }
+        throw new IllegalArgumentException("Kernel Options must either be String or Map!");
     }
 
     /**
-     * Setter for the kernel options
+     * TODO
      *
-     * @param kernelOptionsIn the kernelOptions to set in the form of a map
+     * @param <T> TODO
+     * @param kernelOptionsIn TODO
      */
-    public void setKernelOptions(Map<String, Object> kernelOptionsIn) {
-        setKernelOptions(convertOptionsMap(kernelOptionsIn));
+    public <T> void setResolvedKernelOptions(T kernelOptionsIn) {
+        if (kernelOptionsIn instanceof String || kernelOptionsIn instanceof Map) {
+            modifyResolved(SET_KERNEL_OPTIONS, kernelOptionsIn);
+        }
+        throw new IllegalArgumentException("Kernel Options must either be String or Map!");
     }
 
     /**
@@ -673,20 +701,32 @@ public abstract class CobblerObject {
      * string that is splittable by Pythons {@code shelx.split} function.
      *
      * @param kernelOptionsPostIn the kernelOptionsPost to set
+     * @param <T> TODO
      * @see <a href="https://docs.python.org/3/library/shlex.html#shlex.split">Python - shlex.split</a>
      */
-    public void setKernelOptionsPost(String kernelOptionsPostIn) {
-        modify(SET_KERNEL_OPTIONS_POST, kernelOptionsPostIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public <T> void setKernelOptionsPost(Optional<T> kernelOptionsPostIn) {
+        if (kernelOptionsPostIn.isEmpty()) {
+            if (this instanceof Distro) {
+                throw new IllegalArgumentException("Kernel Options Post cannot be set to inherit on a Distro!");
+            }
+            modify(SET_KERNEL_OPTIONS_POST, INHERIT_KEY);
+            return;
+        }
+        T kernelOptionsPostValue = kernelOptionsPostIn.get();
+        if (kernelOptionsPostValue instanceof String || kernelOptionsPostValue instanceof Map) {
+            modify(SET_KERNEL_OPTIONS_POST, kernelOptionsPostIn);
+        }
+        throw new IllegalArgumentException("Kernel Options Post must either be String or Map!");
     }
 
     /**
-     * Setter for the kernel post options via its raw value
+     * TODO
      *
-     * @param kernelOptionsPostIn the kernelOptionsPost to set in the form of
-     *                            a map
+     * @param kernelOptionsPostIn TODO
      */
-    public void setKernelOptionsPost(Map<String, Object> kernelOptionsPostIn) {
-        setKernelOptionsPost(convertOptionsMap(kernelOptionsPostIn));
+    public void setResolvedKernelOptionsPost(Map<String, Object> kernelOptionsPostIn) {
+        modifyResolved(SET_KERNEL_OPTIONS_POST, kernelOptionsPostIn);
     }
 
     /**
@@ -696,9 +736,8 @@ public abstract class CobblerObject {
      * @return The kernelMeta. It could be that this returns {@link #INHERIT_KEY} instead of a Map.
      * @cobbler.inheritable This property has a matching resolved method. {@link #getResolvedAutoinstallMeta()}
      */
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> getKsMeta() {
-        return (Map<String, Object>) dataMap.get(KS_META);
+    public Optional<Map<String, Object>> getKsMeta() {
+        return this.<Map<String, Object>>retrieveOptionalValue(KS_META);
     }
 
     /**
@@ -708,7 +747,7 @@ public abstract class CobblerObject {
      */
     @SuppressWarnings("unchecked")
     public Map<String, Object> getResolvedAutoinstallMeta() {
-        return (Map<String, Object>) dataMap.get(KS_META);
+        return (Map<String, Object>) dataMapResolved.get(KS_META);
     }
 
     /**
@@ -716,8 +755,9 @@ public abstract class CobblerObject {
      *
      * @param kernelMetaIn the kernelMeta to set
      */
-    public void setKsMeta(Map<String, ?> kernelMetaIn) {
-        modify(SET_KS_META, kernelMetaIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setKsMeta(Optional<Map<String, Object>> kernelMetaIn) {
+        this.<Map<String, Object>>modifyRawHelper(SET_KS_META, kernelMetaIn);
     }
 
     /**
@@ -725,8 +765,8 @@ public abstract class CobblerObject {
      *
      * @param kernelMetaIn the kernelMeta to set
      */
-    public void setResolvedAutoinstallMeta(Map<String, ?> kernelMetaIn) {
-        modify(SET_KS_META, kernelMetaIn);
+    public void setResolvedAutoinstallMeta(Map<String, Object> kernelMetaIn) {
+        modifyResolved(SET_KS_META, kernelMetaIn);
     }
 
     /**
@@ -746,6 +786,7 @@ public abstract class CobblerObject {
     public void setName(String nameIn) {
         invokeRename(nameIn);
         dataMap.put(NAME, nameIn);
+        dataMapResolved.put(NAME, nameIn);
         handle = null;
         handle = getHandle();
         reload();
@@ -776,8 +817,9 @@ public abstract class CobblerObject {
      * @param key the Red Hat activation key
      * @see #getRedHatManagementKey()
      */
-    public void setRedHatManagementKey(String key) {
-        modify(REDHAT_KEY, key);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setRedHatManagementKey(Optional<String> key) {
+        this.<String>modifyRawHelper(REDHAT_KEY, key);
     }
 
     /**
@@ -791,6 +833,15 @@ public abstract class CobblerObject {
     }
 
     /**
+     * TODO
+     *
+     * @param key TODO
+     */
+    public void setResolvedRedHatManagementKey(String key) {
+        modifyResolved(REDHAT_KEY, key);
+    }
+
+    /**
      * Get the Red Hat management key
      * <p>
      * This is used in the context of a
@@ -801,8 +852,17 @@ public abstract class CobblerObject {
      * @return returns the red hat key(s) as a string
      * @cobbler.inheritable TODO
      */
-    public String getRedHatManagementKey() {
-        return (String) dataMap.get(REDHAT_KEY);
+    public Optional<String> getRedHatManagementKey() {
+        return this.<String>retrieveOptionalValue(REDHAT_KEY);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public String getResolvedRedHatManagementKey() {
+        return (String) dataMapResolved.get(REDHAT_KEY);
     }
 
     /**
@@ -812,10 +872,11 @@ public abstract class CobblerObject {
      * @see #getRedHatManagementKey()
      */
     public Set<String> getRedHatManagementKeySet() {
-        String keys = StringUtils.defaultString(getRedHatManagementKey());
-        if (keys.isBlank()) {
+        Optional<String> key = getRedHatManagementKey();
+        if (key.isEmpty() || key.get().isBlank()) {
             return new HashSet<>();
         }
+        String keys = StringUtils.defaultString(key.get());
         String[] sets = (keys).split(",");
         return new HashSet<>(Arrays.asList(sets));
     }

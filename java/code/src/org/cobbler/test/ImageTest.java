@@ -17,15 +17,12 @@ package org.cobbler.test;
 
 import static com.redhat.rhn.testing.RhnBaseTestCase.assertContains;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.redhat.rhn.testing.TestUtils;
 
 import org.cobbler.CobblerConnection;
 import org.cobbler.Image;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +70,7 @@ public class ImageTest {
         MockConnection.clear();
         connection = new MockConnection("http://localhost", "token");
         image = Image.create(connection, EXPECTED_NAME, EXPECTED_TYPE, EXPECTED_FILE);
-        assertNotNull(image);
+        Assertions.assertNotNull(image);
     }
 
     /**
@@ -83,7 +80,7 @@ public class ImageTest {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        assertTrue(image.remove());
+        Assertions.assertTrue(image.remove());
     }
 
     /**
@@ -91,9 +88,9 @@ public class ImageTest {
      */
     @Test
     public void testCreate() {
-        assertEquals(EXPECTED_NAME, image.getName());
-        assertEquals(EXPECTED_TYPE, image.getType());
-        assertEquals(EXPECTED_FILE, image.getFile());
+        Assertions.assertEquals(EXPECTED_NAME, image.getName());
+        Assertions.assertEquals(EXPECTED_TYPE, image.getType());
+        Assertions.assertEquals(EXPECTED_FILE, image.getFile());
     }
 
     /**
@@ -101,7 +98,7 @@ public class ImageTest {
      */
     @Test
     public void testLookupByName() {
-        assertEquals(image, Image.lookupByName(connection, EXPECTED_NAME));
+        Assertions.assertEquals(image, Image.lookupByName(connection, EXPECTED_NAME));
     }
 
     /**
@@ -109,7 +106,7 @@ public class ImageTest {
      */
     @Test
     public void testLookupById() {
-        assertEquals(image, Image.lookupById(connection, image.getId()));
+        Assertions.assertEquals(image, Image.lookupById(connection, image.getId()));
     }
 
     /**
@@ -118,7 +115,7 @@ public class ImageTest {
     @Test
     public void testList() {
         List<Image> result = Image.list(connection);
-        assertEquals(1, result.size());
+        Assertions.assertEquals(1, result.size());
         assertContains(result, image);
     }
 
@@ -129,7 +126,7 @@ public class ImageTest {
     public void testSetGetType() {
         String expected = Image.TYPE_DIRECT;
         image.setType(expected);
-        assertEquals(expected, image.getType());
+        Assertions.assertEquals(expected, image.getType());
         assertImageKeyEquals(expected, Image.TYPE);
     }
 
@@ -138,9 +135,15 @@ public class ImageTest {
      */
     @Test
     public void testSetGetFile() {
+        // Arrange
         String expected = TestUtils.randomString();
+
+        // Act
         image.setFile(expected);
-        assertEquals(expected, image.getFile());
+        String result = image.getFile();
+
+        // Assert
+        Assertions.assertEquals(expected, result);
         assertImageKeyEquals(expected, Image.FILE);
     }
 
@@ -157,6 +160,6 @@ public class ImageTest {
         criteria.put("uid", image.getId());
         List<Map<String, Object>> result = (List<Map<String, Object>>) connection
                 .invokeMethod("find_image", criteria);
-        assertEquals(expected, result.get(0).get(key));
+        Assertions.assertEquals(expected, result.get(0).get(key));
     }
 }

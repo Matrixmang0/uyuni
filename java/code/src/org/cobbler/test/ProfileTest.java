@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ProfileTest {
 
@@ -78,11 +79,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "virtBridge";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        String expectedResult = "my_bridge";
+        Optional<String> expectedResult = Optional.of("my_bridge");
 
         // Act
         testProfile.setVirtBridge(expectedResult);
-        String result = testProfile.getVirtBridge();
+        Optional<String> result = testProfile.getVirtBridge();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -93,11 +94,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "virtCpus";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        int expectedResult = 64;
+        Optional<Integer> expectedResult = Optional.of(64);
 
         // Act
         testProfile.setVirtCpus(expectedResult);
-        int result = testProfile.getVirtCpus();
+        Optional<Integer> result = testProfile.getVirtCpus();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -108,11 +109,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "virtType";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        String expectedResult = "test";
+        Optional<String> expectedResult = Optional.of("test");
 
         // Act
         testProfile.setVirtType(expectedResult);
-        String result = testProfile.getVirtType();
+        Optional<String> result = testProfile.getVirtType();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -138,11 +139,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "virtPath";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        String expectedResult = "test";
+        Optional<String> expectedResult = Optional.of("test");
 
         // Act
         testProfile.setVirtPath(expectedResult);
-        String result = testProfile.getVirtPath();
+        Optional<String> result = testProfile.getVirtPath();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -153,11 +154,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "server";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        String expectedResult = "test";
+        Optional<String> expectedResult = Optional.of("test");
 
         // Act
         testProfile.setServer(expectedResult);
-        String result = testProfile.getServer();
+        Optional<String> result = testProfile.getServer();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -169,11 +170,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "nameServers";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        String expectedResult = "test";
+        Optional<List<String>> expectedResult = Optional.of(Arrays.asList("test", "test2"));
 
         // Act
-        testProfile.setName(expectedResult);
-        String result = testProfile.getNameServers();
+        testProfile.setNameServers(expectedResult);
+        Optional<List<String>> result = testProfile.getNameServers();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -199,11 +200,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "virtFileSize";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        double expectedResult = 5.0;
+        Optional<Double> expectedResult = Optional.of(5.0);
 
         // Act
         testProfile.setVirtFileSize(expectedResult);
-        double result = testProfile.getVirtFileSize();
+        Optional<Double> result = testProfile.getVirtFileSize();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -214,11 +215,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "virtRam";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        int expectedResult = 5;
+        Optional<Integer> expectedResult = Optional.of(5);
 
         // Act
         testProfile.setVirtRam(expectedResult);
-        int result = testProfile.getVirtRam();
+        Optional<Integer> result = testProfile.getVirtRam();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);
@@ -244,11 +245,11 @@ public class ProfileTest {
         // Arrange
         String profileName = "syncRedHatManagementKeys";
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
-        String expectedResult = "test2,test1";
+        Optional<String> expectedResult = Optional.of("test2,test1");
 
         // Act
         testProfile.syncRedHatManagementKeys(null, Arrays.asList("test1", "test2"));
-        String result = testProfile.getRedHatManagementKey();
+        Optional<String> result = testProfile.getRedHatManagementKey();
 
         // Assert
         Assertions.assertEquals(expectedResult, result);

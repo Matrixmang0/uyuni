@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -207,17 +208,24 @@ public class SystemRecord extends CobblerObject {
         List<Map<String, Object>> maps = lookupDataMapsByCriteria(
                 client, PROFILE, profileName, "find_system");
 
-        for (Map map : maps) {
+        for (Map<String, Object> map : maps) {
             toReturn.add(handleLookup(client, map));
         }
         return toReturn;
     }
 
 
-    private static SystemRecord handleLookup(CobblerConnection client, Map sysMap) {
+    @SuppressWarnings("unchecked")
+    private static SystemRecord handleLookup(CobblerConnection client, Map<String, Object> sysMap) {
         if (sysMap != null) {
             SystemRecord sys = new SystemRecord(client);
             sys.dataMap = sysMap;
+            sys.dataMapResolved = (Map<String, Object>) client.invokeMethod(
+                    "get_system",
+                    sys.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
             return sys;
         }
         return null;
@@ -238,6 +246,12 @@ public class SystemRecord extends CobblerObject {
         for (Map<String, Object> sysMap : cSystems) {
             SystemRecord sys = new SystemRecord(connection);
             sys.dataMap = sysMap;
+            sys.dataMapResolved = (Map<String, Object>) connection.invokeMethod(
+                    "get_system",
+                    sys.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
             systems.add(sys);
         }
         return systems;
@@ -251,6 +265,7 @@ public class SystemRecord extends CobblerObject {
      * @param excludes   a list of cobbler ids to file on
      * @return a list of systems.
      */
+    @SuppressWarnings("unchecked")
     public static List<SystemRecord> list(CobblerConnection connection,
                                           Set<String> excludes) {
         List<SystemRecord> systems = new LinkedList<>();
@@ -260,6 +275,12 @@ public class SystemRecord extends CobblerObject {
         for (Map<String, Object> sysMap : cSystems) {
             SystemRecord sys = new SystemRecord(connection);
             sys.dataMap = sysMap;
+            sys.dataMapResolved = (Map<String, Object>) connection.invokeMethod(
+                    "get_system",
+                    sys.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
             if (!excludes.contains(sys.getId())) {
                 systems.add(sys);
             }
@@ -267,11 +288,17 @@ public class SystemRecord extends CobblerObject {
         return systems;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected String invokeGetHandle() {
         return (String) client.invokeTokenMethod("get_system_handle", this.getName());
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void invokeModify(String key, Object value) {
         client.invokeTokenMethod("modify_system", getHandle(), key, value);
@@ -282,7 +309,7 @@ public class SystemRecord extends CobblerObject {
      */
     @Override
     protected void invokeModifyResolved(String key, Object value) {
-        // TODO
+        client.invokeTokenMethod("set_item_resolved_value", getUid(), key, value);
     }
 
     /**
@@ -308,6 +335,7 @@ public class SystemRecord extends CobblerObject {
     protected void reload() {
         SystemRecord newSystem = lookupById(client, getId());
         dataMap = newSystem.dataMap;
+        dataMapResolved = newSystem.dataMapResolved;
     }
 
     /**
@@ -360,14 +388,22 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * @return the Cobbler Profile name
+     * This method retrieves the profile associated with the System at hand. This might be null since a System can also
+     * be associated with an Image.
+     *
+     * @return the Cobbler Profile
+     * @see #getImage()
      */
     public Profile getProfile() {
         return Profile.lookupByName(client, (String) dataMap.get(PROFILE));
     }
 
     /**
+     * This method retrieves the Image associated with the System at hand. This might be null since a System can also
+     * be associated with a Profile.
+     *
      * @return the Cobbler Image
+     * @see #getProfile()
      */
     public Image getImage() {
         return Image.lookupByName(client, (String) dataMap.get(IMAGE));
@@ -379,8 +415,17 @@ public class SystemRecord extends CobblerObject {
      * @return the VirtBridge
      * @cobbler.inheritable TODO
      */
-    public String getVirtBridge() {
-        return (String) dataMap.get(VIRT_BRIDGE);
+    public Optional<String> getVirtBridge() {
+        return this.<String>retrieveOptionalValue(VIRT_BRIDGE);
+    }
+
+    /**
+     * Getter for the virtual bridge property in its resolved form
+     *
+     * @return The virtual bridge name
+     */
+    public String getResolvedVirtBridge() {
+        return (String) dataMapResolved.get(VIRT_BRIDGE);
     }
 
     /**
@@ -389,8 +434,17 @@ public class SystemRecord extends CobblerObject {
      * @return the VirtCpus
      * @cobbler.inheritable TODO
      */
-    public int getVirtCpus() {
-        return (Integer) dataMap.get(VIRT_CPUS);
+    public Optional<Integer> getVirtCpus() {
+        return this.<Integer>retrieveOptionalValue(VIRT_CPUS);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public Integer getResolvedVirtCpus() {
+        return (Integer) dataMapResolved.get(VIRT_CPUS);
     }
 
     /**
@@ -399,8 +453,17 @@ public class SystemRecord extends CobblerObject {
      * @return the VirtType
      * @cobbler.inheritable TODO
      */
-    public String getVirtType() {
-        return (String) dataMap.get(VIRT_TYPE);
+    public Optional<String> getVirtType() {
+        return this.<String>retrieveOptionalValue(VIRT_TYPE);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public String getResolvedVirtType() {
+        return (String) dataMapResolved.get(VIRT_TYPE);
     }
 
     /**
@@ -409,8 +472,17 @@ public class SystemRecord extends CobblerObject {
      * @return the VirtPath
      * @cobbler.inheritable TODO
      */
-    public String getVirtPath() {
-        return (String) dataMap.get(VIRT_PATH);
+    public Optional<String> getVirtPath() {
+        return this.<String>retrieveOptionalValue(VIRT_PATH);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public String getResolvedVirtPath() {
+        return (String) dataMapResolved.get(VIRT_PATH);
     }
 
     /**
@@ -419,8 +491,17 @@ public class SystemRecord extends CobblerObject {
      * @return the VirtFileSize
      * @cobbler.inheritable TODO
      */
-    public int getVirtFileSize() {
-        return (Integer) dataMap.get(VIRT_FILE_SIZE);
+    public Optional<Double> getVirtFileSize() {
+        return this.<Double>retrieveOptionalValue(VIRT_FILE_SIZE);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public Double getResolvedVirtFileSize() {
+        return (Double) dataMapResolved.get(VIRT_FILE_SIZE);
     }
 
     /**
@@ -429,8 +510,17 @@ public class SystemRecord extends CobblerObject {
      * @return the VirtRam
      * @cobbler.inheritable TODO
      */
-    public int getVirtRam() {
-        return (Integer) dataMap.get(VIRT_RAM);
+    public Optional<Integer> getVirtRam() {
+        return this.<Integer>retrieveOptionalValue(VIRT_RAM);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public Integer getResolvedVirtRam() {
+        return (Integer) dataMapResolved.get(VIRT_RAM);
     }
 
     /**
@@ -445,45 +535,117 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
+     * TODO
+     *
      * @param virtBridgeIn the VirtBridge
      */
-    public void setVirtBridge(String virtBridgeIn) {
-        modify(VIRT_BRIDGE, virtBridgeIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setVirtBridge(Optional<String> virtBridgeIn) {
+        this.<String>modifyRawHelper(VIRT_BRIDGE, virtBridgeIn);
     }
 
     /**
+     * TODO
+     *
+     * @param virtBridgeIn the VirtBridge
+     */
+    public void setResolvedVirtBridge(String virtBridgeIn) {
+        modifyResolved(VIRT_BRIDGE, virtBridgeIn);
+    }
+
+    /**
+     * TODO
+     *
      * @param virtCpusIn the VirtCpus
      */
-    public void setVirtCpus(int virtCpusIn) {
-        modify(VIRT_CPUS, virtCpusIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setVirtCpus(Optional<Integer> virtCpusIn) {
+        this.<Integer>modifyRawHelper(VIRT_CPUS, virtCpusIn);
     }
 
     /**
+     * TODO
+     *
+     * @param virtCpusIn TODO
+     */
+    public void setResolvedVirtCpus(Integer virtCpusIn) {
+        modifyResolved(VIRT_CPUS, virtCpusIn);
+    }
+
+    /**
+     * TODO
+     *
      * @param virtTypeIn the VirtType
      */
-    public void setVirtType(String virtTypeIn) {
-        modify(VIRT_TYPE, virtTypeIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setVirtType(Optional<String> virtTypeIn) {
+        this.<String>modifyRawHelper(VIRT_TYPE, virtTypeIn);
     }
 
     /**
+     * TODO
+     *
+     * @param virtTypeIn TODO
+     */
+    public void setResolvedVirtType(String virtTypeIn) {
+        modifyResolved(VIRT_TYPE, virtTypeIn);
+    }
+
+    /**
+     * TODO
+     *
      * @param virtPathIn the VirtPath
      */
-    public void setVirtPath(String virtPathIn) {
-        modify(VIRT_PATH, virtPathIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setVirtPath(Optional<String> virtPathIn) {
+        this.<String>modifyRawHelper(VIRT_PATH, virtPathIn);
     }
 
     /**
+     * TODO
+     *
+     * @param virtPathIn TODO
+     */
+    public void setResolvedVirtPath(String virtPathIn) {
+        modifyResolved(VIRT_PATH, virtPathIn);
+    }
+
+    /**
+     * TODO
+     *
      * @param virtFileSizeIn the VirtFileSize
      */
-    public void setVirtFileSize(int virtFileSizeIn) {
-        modify(VIRT_FILE_SIZE, virtFileSizeIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setVirtFileSize(Optional<Integer> virtFileSizeIn) {
+        this.<Integer>modifyRawHelper(VIRT_FILE_SIZE, virtFileSizeIn);
     }
 
     /**
+     * TODO
+     *
+     * @param virtFileSizeIn TODO
+     */
+    public void setResolvedVirtFileSize(Integer virtFileSizeIn) {
+        modifyResolved(VIRT_FILE_SIZE, virtFileSizeIn);
+    }
+
+    /**
+     * TODO
+     *
      * @param virtRamIn the VirtRam
      */
-    public void setVirtRam(int virtRamIn) {
-        modify(VIRT_RAM, virtRamIn);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setVirtRam(Optional<Integer> virtRamIn) {
+        this.<Integer>modifyRawHelper(VIRT_RAM, virtRamIn);
+    }
+
+    /**
+     * TODO
+     *
+     * @param virtRamIn TODO
+     */
+    public void setResolvedVirtRam(Integer virtRamIn) {
+        modifyResolved(VIRT_RAM, virtRamIn);
     }
 
     /**
@@ -496,11 +658,28 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
+     * TODO
+     *
      * @param nameServersIn the NameServers
      * @cobbler.inheritable TODO
      */
-    public void setNameServers(List<String> nameServersIn) {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setNameServers(Optional<List<String>> nameServersIn) {
+        if (nameServersIn.isEmpty()) {
+            modify(NAME_SERVERS, INHERIT_KEY);
+            return;
+        }
         modify(NAME_SERVERS, nameServersIn);
+    }
+
+    /**
+     * TODO
+     *
+     * @param nameServersIn the NameServers
+     * @cobbler.inheritable TODO
+     */
+    public void setResolvedNameServers(List<String> nameServersIn) {
+        modifyResolved(NAME_SERVERS, nameServersIn);
     }
 
     /**
@@ -559,8 +738,17 @@ public class SystemRecord extends CobblerObject {
      * @return TODO
      * @cobbler.inheritable TODO
      */
-    public String getServer() {
-        return (String) dataMap.get(SERVER);
+    public Optional<String> getServer() {
+        return this.<String>retrieveOptionalValue(SERVER);
+    }
+
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
+    public String getResolvedServer() {
+        return (String) dataMapResolved.get(SERVER);
     }
 
     /**
@@ -568,8 +756,18 @@ public class SystemRecord extends CobblerObject {
      *
      * @param server the server host name.
      */
-    public void setServer(String server) {
-        modify(SERVER, server);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public void setServer(Optional<String> server) {
+        modifyRawHelper(SERVER, server);
+    }
+
+    /**
+     * Sets the cobbler server host information for this system
+     *
+     * @param server the server host name.
+     */
+    public void setResolvedServer(String server) {
+        modifyResolved(SERVER, server);
     }
 
     /**
@@ -595,8 +793,11 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
+     * Retrieves the list of network interfaces and converts them to {@link Network}.
+     *
      * @return a list of network interfaces associated to this system
      */
+    @SuppressWarnings("unchecked")
     public List<Network> getNetworkInterfaces() {
         reload();
         List<Network> networks = new LinkedList<>();

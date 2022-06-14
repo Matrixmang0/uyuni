@@ -20,6 +20,7 @@ package org.cobbler;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Cobbler Distribution
@@ -96,10 +97,17 @@ public class Distro extends CobblerObject {
      * @param distroMap The Key-Value Map with the content of the distribution
      * @return Either null or the distribution that has been build by the Map
      */
-    private static Distro handleLookup(CobblerConnection client, Map distroMap) {
+    @SuppressWarnings("unchecked")
+    private static Distro handleLookup(CobblerConnection client, Map<String, Object> distroMap) {
         if (distroMap != null) {
             Distro distro = new Distro(client);
             distro.dataMap = distroMap;
+            distro.dataMapResolved = (Map<String, Object>) client.invokeMethod(
+                    "get_distro",
+                    distro.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
             return distro;
         }
         return null;
@@ -111,6 +119,7 @@ public class Distro extends CobblerObject {
      * @param connection the cobbler connection
      * @return a list of Distros.
      */
+    @SuppressWarnings("unchecked")
     public static List<Distro> list(CobblerConnection connection) {
         List<Distro> distros = new LinkedList<>();
         List<Map<String, Object>> cDistros = (List<Map<String, Object>>)
@@ -119,6 +128,12 @@ public class Distro extends CobblerObject {
         for (Map<String, Object> distroMap : cDistros) {
             Distro distro = new Distro(connection);
             distro.dataMap = distroMap;
+            distro.dataMapResolved = (Map<String, Object>) connection.invokeMethod(
+                    "get_distro",
+                    distro.getName(), // object name
+                    false, // flatten
+                    true // resolved
+            );
             distros.add(distro);
         }
         return distros;
@@ -145,7 +160,7 @@ public class Distro extends CobblerObject {
      */
     @Override
     protected void invokeModifyResolved(String key, Object value) {
-        // TODO
+        client.invokeTokenMethod("set_item_resolved_value", getUid(), key, value);
     }
 
     /**
@@ -179,6 +194,7 @@ public class Distro extends CobblerObject {
     public void reload() {
         Distro newDistro = lookupById(client, getId());
         dataMap = newDistro.dataMap;
+        dataMapResolved = newDistro.dataMapResolved;
     }
 
     /**
@@ -291,18 +307,23 @@ public class Distro extends CobblerObject {
 
     /**
      * Builder to create a Distro
+     *
+     * @param <T> TODO
      */
-    public static class Builder {
+    public static class Builder<T> {
 
         private String name;
         private String kernel;
         private String initrd;
-        private Map<String, ? extends Object> ksmeta;
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<Map<String, Object>> ksmeta;
         private String breed;
         private String osVersion;
         private String arch;
-        private String kernelOptions;
-        private String kernelOptionsPost;
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<T> kernelOptions;
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<T> kernelOptionsPost;
 
 
         /**
@@ -311,7 +332,7 @@ public class Distro extends CobblerObject {
          * @param archIn value to set
          * @return this builder to chain operations
          */
-        public Builder setArch(String archIn) {
+        public Builder<T> setArch(String archIn) {
             arch = archIn;
             return this;
         }
@@ -322,7 +343,7 @@ public class Distro extends CobblerObject {
          * @param breedIn value to set
          * @return this builder to chain operations
          */
-        public Builder setBreed(String breedIn) {
+        public Builder<T> setBreed(String breedIn) {
             breed = breedIn;
             return this;
         }
@@ -333,7 +354,7 @@ public class Distro extends CobblerObject {
          * @param initrdIn value to set
          * @return this builder to chain operations
          */
-        public Builder setInitrd(String initrdIn) {
+        public Builder<T> setInitrd(String initrdIn) {
             initrd = initrdIn;
             return this;
         }
@@ -344,7 +365,7 @@ public class Distro extends CobblerObject {
          * @param kernelIn value to set
          * @return this builder to chain operations
          */
-        public Builder setKernel(String kernelIn) {
+        public Builder<T> setKernel(String kernelIn) {
             kernel = kernelIn;
             return this;
         }
@@ -355,7 +376,8 @@ public class Distro extends CobblerObject {
          * @param kernelOptionsIn value to set
          * @return this builder to chain operations
          */
-        public Builder setKernelOptions(String kernelOptionsIn) {
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        public Builder<T> setKernelOptions(Optional<T> kernelOptionsIn) {
             kernelOptions = kernelOptionsIn;
             return this;
         }
@@ -366,7 +388,8 @@ public class Distro extends CobblerObject {
          * @param kernelOptionsPostIn value to set
          * @return this builder to chain operations
          */
-        public Builder setKernelOptionsPost(String kernelOptionsPostIn) {
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        public Builder<T> setKernelOptionsPost(Optional<T> kernelOptionsPostIn) {
             kernelOptionsPost = kernelOptionsPostIn;
             return this;
         }
@@ -377,7 +400,8 @@ public class Distro extends CobblerObject {
          * @param ksmetaIn value to set
          * @return this builder to chain operations
          */
-        public Builder setKsmeta(Map<String, ? extends Object> ksmetaIn) {
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        public Builder<T> setKsmeta(Optional<Map<String, Object>> ksmetaIn) {
             ksmeta = ksmetaIn;
             return this;
         }
@@ -388,7 +412,7 @@ public class Distro extends CobblerObject {
          * @param nameIn value to set
          * @return this builder to chain operations
          */
-        public Builder setName(String nameIn) {
+        public Builder<T> setName(String nameIn) {
             name = nameIn;
             return this;
         }
@@ -399,7 +423,7 @@ public class Distro extends CobblerObject {
          * @param osVersionIn value to set
          * @return this builder to chain operations
          */
-        public Builder setOsVersion(String osVersionIn) {
+        public Builder<T> setOsVersion(String osVersionIn) {
             osVersion = osVersionIn;
             return this;
         }
@@ -421,8 +445,8 @@ public class Distro extends CobblerObject {
             if (breed != null) {
                 distro.setBreed(breed);
             }
-            if (ksmeta != null) {
-                if (ksmeta.containsKey("autoyast")) {
+            if (ksmeta.isPresent()) {
+                if (ksmeta.get().containsKey("autoyast")) {
                     distro.setBreed("suse");
                 }
                 distro.setKsMeta(ksmeta);
@@ -430,7 +454,7 @@ public class Distro extends CobblerObject {
             if (osVersion != null) {
                 distro.setOsVersion(osVersion);
             }
-            if (kernelOptions != null) {
+            if (kernelOptions.isPresent()) {
                 distro.setKernelOptions(kernelOptions);
             }
             if (kernelOptionsPost != null) {

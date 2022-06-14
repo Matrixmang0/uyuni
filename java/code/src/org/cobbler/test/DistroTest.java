@@ -15,13 +15,16 @@
 
 package org.cobbler.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.cobbler.CobblerConnection;
 import org.cobbler.Distro;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -29,18 +32,25 @@ import java.util.HashMap;
  */
 public class DistroTest {
     private CobblerConnection client;
+    private Distro testDistro;
 
-    public void setUpXX() throws Exception {
-        client = new CobblerConnection("http://localhost/cobbler_api_rw",
-                "admin", "foo");
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockConnection.clear();
+        client = new MockConnection("http://localhost", "token");
+        String distroName = "testDistro";
+        testDistro = new Distro.Builder().setName(distroName).build(client);
+    }
+
+    @AfterEach
+    public void teardown() {
+        testDistro = null;
+        MockConnection.clear();
     }
 
     @Test
-    public void testFoo() {
-        //no op to keep junit happy
-    }
-
-    public void xxxtestDistroCreate() throws Exception {
+    public void testDistroBuilder() {
+        // Arrange
         String name = "Partha-Test";
         String kernel =
                 "/var/satellite/rhn/kickstart/ks-rhel-i386-as-4-u2//images/pxeboot/vmlinuz";
@@ -49,18 +59,119 @@ public class DistroTest {
         String breed = "redhat";
         String osVersion = "rhel4";
         String arch = "i386";
+
+        // Act
         Distro newDistro = new Distro.Builder()
                 .setName(name)
                 .setKernel(kernel)
                 .setInitrd(initrd)
-                .setKsmeta(new HashMap<>())
+                .setKsmeta(Optional.empty())
                 .setBreed(breed)
                 .setOsVersion(osVersion)
                 .setArch(arch)
                 .build(client);
-        assertEquals(name, newDistro.getName());
-        assertEquals(kernel, newDistro.getKernel());
-        assertEquals(initrd, newDistro.getInitrd());
-        newDistro.remove();
+
+        // Assert
+        Assertions.assertEquals(name, newDistro.getName());
+        Assertions.assertEquals(kernel, newDistro.getKernel());
+        Assertions.assertEquals(initrd, newDistro.getInitrd());
+    }
+
+    @Test
+    public void testOwnersRaw() {
+        // Arrange
+        Optional<List<String>> expectedRaw = Optional.of(Arrays.asList("test1", "test2"));
+
+        // Act
+        testDistro.setOwners(expectedRaw);
+        Optional<List<String>> resultRaw = testDistro.getOwners();
+
+        // Assert
+        Assertions.assertEquals(expectedRaw, resultRaw);
+    }
+
+    @Test
+    public void testOwnersResolved() {
+        // Arrange
+        List<String> expectedResolved = Arrays.asList("test1", "test2");
+
+        // Act
+        testDistro.setResolvedOwners(expectedResolved);
+        List<String> resultResolved = testDistro.getResolvedOwners();
+
+        // Assert
+        Assertions.assertEquals(expectedResolved, resultResolved);
+    }
+
+    @Test
+    public void testKernelOptions() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testKernelOptionsPost() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testAutoinstallMeta() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testRedhatManagementKey() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testComment() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testManagementClasses() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testUid() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testName() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testCreated() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testModified() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testDepth() {
+        // TODO
+        Assertions.fail("Not implemented");
+    }
+
+    @Test
+    public void testParent() {
+        // TODO
+        Assertions.fail("Not implemented");
     }
 }
