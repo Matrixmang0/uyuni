@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -50,7 +51,7 @@ public class Network {
     /**
      * The IPv6 secondaries of the network interface
      */
-    private ArrayList<String> ipv6Secondaries;
+    private List<String> ipv6Secondaries;
     /**
      * Whether the interface is statically configured or dynamically
      */
@@ -252,14 +253,14 @@ public class Network {
     /**
      * @return Returns secondary IPv6 addresses of the interface.
      */
-    public ArrayList<String> getIpv6Secondaries() {
+    public List<String> getIpv6Secondaries() {
         return ipv6Secondaries;
     }
 
     /**
      * @param secondariesIn List of secondary IPv6 addresses to set.
      */
-    public void setIpv6Secondaries(ArrayList<String> secondariesIn) {
+    public void setIpv6Secondaries(List<String> secondariesIn) {
         this.ipv6Secondaries = secondariesIn;
     }
 
