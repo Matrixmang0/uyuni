@@ -91,7 +91,7 @@ BuildRequires:  perl-libwww-perl
 %else
 Requires:       %{sbinpath}/restorecon
 %endif
-Requires:       cobbler >= 3.3.2
+Requires:       cobbler >= 3.3.3
 Requires:       perl-Satcon
 Requires:       spacewalk-admin
 Requires:       spacewalk-backend-tools
