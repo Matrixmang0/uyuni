@@ -14,8 +14,6 @@
  */
 package org.cobbler.test;
 
-import static org.junit.Assert.fail;
-
 import org.cobbler.Distro;
 import org.cobbler.Profile;
 import org.junit.jupiter.api.AfterEach;
