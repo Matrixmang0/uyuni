@@ -353,6 +353,7 @@ public class Profile extends CobblerObject {
      * @return true if menu enabled
      */
     public boolean menuEnabled() {
+        // FIXME: This will crash since we use real booleans in Cobbler now.
         return 1 == (Integer) dataMap.get(ENABLE_MENU);
     }
 
@@ -488,6 +489,7 @@ public class Profile extends CobblerObject {
      * @return the generated kickstart text
      */
     public String generateKickstart() {
+        // FIXME: Remote procedure name doesn't exist anymore.
         return (String) client.invokeTokenMethod("generate_kickstart", getName());
     }
 
@@ -496,6 +498,8 @@ public class Profile extends CobblerObject {
      */
     public void syncRedHatManagementKeys(Collection<String> keysToRemove,
                                          Collection<String> keysToAdd) {
+        // FIXME: The inheritance in Cobbler should not be broken with this method. Thus it should be completely
+        //        removed.
         super.syncRedHatManagementKeys(keysToRemove, keysToAdd);
         for (SystemRecord record :
                 SystemRecord.listByAssociatedProfile(client, this.getName())) {
