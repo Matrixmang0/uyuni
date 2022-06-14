@@ -813,6 +813,9 @@ public abstract class CobblerObject {
      */
     public Set<String> getRedHatManagementKeySet() {
         String keys = StringUtils.defaultString(getRedHatManagementKey());
+        if (keys.isBlank()) {
+            return new HashSet<>();
+        }
         String[] sets = (keys).split(",");
         return new HashSet<>(Arrays.asList(sets));
     }
@@ -827,8 +830,12 @@ public abstract class CobblerObject {
     public void syncRedHatManagementKeys(Collection<String> keysToRemove,
                                          Collection<String> keysToAdd) {
         Set<String> keySet = getRedHatManagementKeySet();
-        keySet.removeAll(keysToRemove);
-        keySet.addAll(keysToAdd);
+        if (keysToRemove != null) {
+            keySet.removeAll(keysToRemove);
+        }
+        if (keysToAdd != null) {
+            keySet.addAll(keysToAdd);
+        }
         if (keySet.size() > 1 && keySet.contains(INHERIT_KEY)) {
             keySet.remove(INHERIT_KEY);
         }
