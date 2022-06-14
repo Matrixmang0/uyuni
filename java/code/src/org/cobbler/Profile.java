@@ -274,6 +274,8 @@ public class Profile extends CobblerObject {
     }
 
     /**
+     * This returns the full absolute path on the SUMA Server.
+     *
      * @return the Kickstart file path
      */
     public String getKickstart() {
@@ -281,7 +283,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the virtual bridge property.
      *
      * @return the VirtBridge
      * @cobbler.inheritable TODO
@@ -291,7 +293,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the virtual CPU cores property.
      *
      * @return the VirtCpus
      * @cobbler.inheritable TODO
@@ -301,7 +303,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the type of VM property.
      *
      * @return the VirtType
      * @cobbler.inheritable TODO
@@ -318,7 +320,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the virtual disk location property
      *
      * @return the VirtPath
      * @cobbler.inheritable TODO
@@ -328,7 +330,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the server property
      *
      * @return the Server
      * @cobbler.inheritable TODO
@@ -338,7 +340,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the name servers property
      *
      * @return the NameServers
      * @cobbler.inheritable TODO
@@ -355,7 +357,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the virtual disk size property
      *
      * @return the VirtFileSize
      * @cobbler.inheritable TODO
@@ -365,7 +367,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the virtual RAM property
      *
      * @return the VirtRam
      * @cobbler.inheritable TODO
@@ -390,6 +392,8 @@ public class Profile extends CobblerObject {
     }
 
     /**
+     * This is the path relative to the Cobbler template directory.
+     *
      * @param kickstartIn the Kickstart
      */
     public void setKickstart(String kickstartIn) {
@@ -472,7 +476,7 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * @param name the Distr name
+     * @param name the Distro name
      */
     public void setDistro(String name) {
         modify(DISTRO, name);
