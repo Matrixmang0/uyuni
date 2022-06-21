@@ -535,7 +535,7 @@ public class ConfigDefaults {
      * Returns the default virt disk size in GBs
      * @return the virt disk size
      */
-    public int getDefaultVirtDiskSize() {
+    public double getDefaultVirtDiskSize() {
         return Config.get().getInt(VIRT_DISK, 3);
     }
 

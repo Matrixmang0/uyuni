@@ -46,6 +46,7 @@ import org.cobbler.Distro;
 import org.cobbler.Profile;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -312,10 +313,10 @@ public class KickstartDetailsEditAction extends BaseKickstartEditAction {
         }
 
         if (KickstartDetailsEditAction.canSaveVirtOptions(ksdata, form)) {
-            prof.setVirtRam((Integer) form.get(VIRT_MEMORY));
-            prof.setVirtCpus((Integer) form.get(VIRT_CPU));
-            prof.setVirtFileSize((Integer) form.get(VIRT_DISK_SIZE));
-            prof.setVirtBridge(form.getString(VIRT_BRIDGE));
+            prof.setVirtRam(Optional.of((Integer) form.get(VIRT_MEMORY)));
+            prof.setVirtCpus(Optional.of((Integer) form.get(VIRT_CPU)));
+            prof.setVirtFileSize(Optional.of((Double) form.get(VIRT_DISK_SIZE)));
+            prof.setVirtBridge(Optional.of(form.getString(VIRT_BRIDGE)));
         }
         prof.save();
     }

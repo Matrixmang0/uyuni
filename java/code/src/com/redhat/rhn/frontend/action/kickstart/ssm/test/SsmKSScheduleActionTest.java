@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Optional;
 
 import servletunit.HttpServletRequestSimulator;
 
@@ -57,11 +58,11 @@ public class SsmKSScheduleActionTest extends RhnMockStrutsTestCase {
     @Test
     public void testCreateSystemRecordsByProfile() throws Exception {
         CobblerConnection connection = CobblerXMLRPCHelper.getConnection(user.getLogin());
-        Distro distro = new Distro.Builder()
+        Distro distro = new Distro.Builder<String>()
                 .setName("test-distro")
                 .setKernel("kernel")
                 .setInitrd("initrd")
-                .setKsmeta(new HashMap<>())
+                .setKsmeta(Optional.empty())
                 .build(connection);
         Profile profile = Profile.create(connection, "test-profile", distro);
         Server server1 = ServerTestUtils.createTestSystem(user);
@@ -171,11 +172,11 @@ public class SsmKSScheduleActionTest extends RhnMockStrutsTestCase {
         KickstartData kickstartData = KickstartDataTest.createKickstartWithProfile(user);
         KickstartIpTest.addIpRangesToKickstart(kickstartData);
 
-        Distro distro = new Distro.Builder()
+        Distro distro = new Distro.Builder<String>()
                 .setName("test-distro")
                 .setKernel("kernel")
                 .setInitrd("initrd")
-                .setKsmeta(new HashMap<>())
+                .setKsmeta(Optional.empty())
                 .build(connection);
         Profile profile = Profile.create(connection, "test-profile", distro);
 
