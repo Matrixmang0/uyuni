@@ -264,11 +264,14 @@ public abstract class CobblerObject {
     }
 
     /**
-     * TODO
+     * This helper function checks if the Optional we pass is empty or not. The mechanism in Java works that an Empty
+     * means that the object does not have a dedicated value and thus inherits from the parent or the settings.
+     * <p>
+     * Using this makes only sense in Setters where the corresponding Getter has a {@code cobbler.inheritable} tag set.
      *
-     * @param key TODO
-     * @param valueIn TODO
-     * @param <T> TODO
+     * @param key The property to modify
+     * @param valueIn The new value for the property
+     * @param <T> The type of the property that can be inherited
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected <T> void modifyRawHelper(String key, Optional<T> valueIn) {
@@ -280,10 +283,13 @@ public abstract class CobblerObject {
     }
 
     /**
-     * TODO
+     * This helper function will automatically convert the Inherit key to an empty Optional so that this step doesn't
+     * have to be repeated.
+     * <p>
+     * Using this makes only sense in Setters where the corresponding Getter has a {@code cobbler.inheritable} tag set.
      *
-     * @param key
-     * @param <T>
+     * @param key The property name that should be retrieved
+     * @param <T> The type of the property
      */
     @SuppressWarnings("unchecked")
     protected <T> Optional<T> retrieveOptionalValue(String key) {
@@ -374,14 +380,11 @@ public abstract class CobblerObject {
 
     /**
      * Getter for the management classes in their raw form
-     * TODO
      *
      * @return the managementClasses
-     * @cobbler.inheritable This property can have the value
-     *                      {@link #INHERIT_KEY} and thus has an accompanying
+     * @cobbler.inheritable This property can have the value {@link #INHERIT_KEY} and thus has an accompanying
      *                      method {@link #getResolvedManagementClasses()}.
      */
-    @SuppressWarnings("unchecked")
     public Optional<List<String>> getManagementClasses() {
         return this.<List<String>>retrieveOptionalValue(MGMT_CLASSES);
     }
@@ -488,9 +491,8 @@ public abstract class CobblerObject {
      * Getter for the owners.
      *
      * @return the owners
-     * @cobbler.inheritable This field can have the value {@link #INHERIT_KEY}
-     *                      and thus has an accompanying resolved method
-     *                      {@link #getResolvedOwners()}.
+     * @cobbler.inheritable This field can have the value {@link #INHERIT_KEY} and thus has an accompanying resolved
+     *                      method {@link #getResolvedOwners()}.
      */
     public Optional<List<String>> getOwners() {
         return this.<List<String>>retrieveOptionalValue(OWNERS);
@@ -510,9 +512,8 @@ public abstract class CobblerObject {
      * Setter for the owners
      *
      * @param ownersIn the owners to set
-     * @cobbler.inheritable This field can have the value {@link #INHERIT_KEY}
-     *                      and thus has an accompanying resolved method
-     *                      {@link #setResolvedOwners(List)} ()}.
+     * @cobbler.inheritable This field can have the value {@link #INHERIT_KEY} and thus has an accompanying resolved
+     *                      method {@link #setResolvedOwners(List)} ()}.
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setOwners(Optional<List<String>> ownersIn) {
@@ -593,7 +594,8 @@ public abstract class CobblerObject {
      * Getter for the kernel options
      *
      * @return the kernelOptions
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object(s) and the settings. Since this is a dict in
+     *                      Python this can be resolved through the whole chain.
      */
     public Optional<Map<String, Object>> getKernelOptions() {
         return this.<Map<String, Object>>retrieveOptionalValue(KERNEL_OPTIONS);
@@ -615,7 +617,8 @@ public abstract class CobblerObject {
      * Getter for the post kernel options
      *
      * @return the kernelOptionsPost
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object(s). Since this is a dict in Python this can be
+     *                      resolved through the whole chain.
      */
     public Optional<Map<String, Object>> getKernelOptionsPost() {
         return this.<Map<String, Object>>retrieveOptionalValue(KERNEL_OPTIONS_POST);
@@ -668,7 +671,8 @@ public abstract class CobblerObject {
      *
      * @param kernelOptionsIn the kernelOptions to set
      * @param <T> The type you want to use for the kernel options. Must be either a {@code String} or
-     *            {@code Map<String, Objet>}.
+     *            {@code Map<String, Object>}.
+     * @see #getKernelOptions()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public <T> void setKernelOptions(Optional<T> kernelOptionsIn) {
@@ -684,10 +688,12 @@ public abstract class CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved kernel options
      *
-     * @param <T> TODO
-     * @param kernelOptionsIn TODO
+     * @param <T> The type you want to use for the kernel options. Must be either a {@code String} or
+     *            {@code Map<String, Object>}.
+     * @param kernelOptionsIn the kernelOptions to set
+     * @see #getKernelOptions()
      */
     public <T> void setResolvedKernelOptions(T kernelOptionsIn) {
         if (kernelOptionsIn instanceof String || kernelOptionsIn instanceof Map) {
@@ -701,8 +707,10 @@ public abstract class CobblerObject {
      * string that is splittable by Pythons {@code shelx.split} function.
      *
      * @param kernelOptionsPostIn the kernelOptionsPost to set
-     * @param <T> TODO
+     * @param <T> The type you want to use for the post kernel options. Must be either a {@code String} or
+     *            {@code Map<String, Object>}.
      * @see <a href="https://docs.python.org/3/library/shlex.html#shlex.split">Python - shlex.split</a>
+     * @see #getKernelOptionsPost()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public <T> void setKernelOptionsPost(Optional<T> kernelOptionsPostIn) {
@@ -721,9 +729,10 @@ public abstract class CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved kernel options
      *
-     * @param kernelOptionsPostIn TODO
+     * @param kernelOptionsPostIn The new kernel options. It is attempted to deduplicate this through the chain upwards.
+     * @see #getKernelOptionsPost()
      */
     public void setResolvedKernelOptionsPost(Map<String, Object> kernelOptionsPostIn) {
         modifyResolved(SET_KERNEL_OPTIONS_POST, kernelOptionsPostIn);
@@ -731,7 +740,6 @@ public abstract class CobblerObject {
 
     /**
      * Retrieves the raw auto-installation metadata for the object.
-     * TODO
      *
      * @return The kernelMeta. It could be that this returns {@link #INHERIT_KEY} instead of a Map.
      * @cobbler.inheritable This property has a matching resolved method. {@link #getResolvedAutoinstallMeta()}
@@ -833,9 +841,10 @@ public abstract class CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the Red Hat management key in its resolved form
      *
-     * @param key TODO
+     * @param key The key to set.
+     * @see #getRedHatManagementKey()
      */
     public void setResolvedRedHatManagementKey(String key) {
         modifyResolved(REDHAT_KEY, key);
@@ -850,16 +859,18 @@ public abstract class CobblerObject {
      * separated string in Cobbler.
      *
      * @return returns the red hat key(s) as a string
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable The inheritance in this case behaves like a fallback to the most parent object. If the most
+     *                      parent object is a distro, the default key from the {@code settings.yaml} is used.
      */
     public Optional<String> getRedHatManagementKey() {
         return this.<String>retrieveOptionalValue(REDHAT_KEY);
     }
 
     /**
-     * TODO
+     * Getter for the resolved RedHat Management Key
      *
-     * @return TODO
+     * @return The RedHat Management Key resolved down the inheritance chain.
+     * @see #getRedHatManagementKey()
      */
     public String getResolvedRedHatManagementKey() {
         return (String) dataMapResolved.get(REDHAT_KEY);

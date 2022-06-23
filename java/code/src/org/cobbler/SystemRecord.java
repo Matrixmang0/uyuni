@@ -214,7 +214,13 @@ public class SystemRecord extends CobblerObject {
         return toReturn;
     }
 
-
+    /**
+     * Returns a Cobbler system matching the given name or null
+     *
+     * @param client The XML-RPC connection to the Cobbler server
+     * @param sysMap The Java Map with the already retrieved raw values of a system
+     * @return The system object or {@code null}
+     */
     @SuppressWarnings("unchecked")
     private static SystemRecord handleLookup(CobblerConnection client, Map<String, Object> sysMap) {
         if (sysMap != null) {
@@ -413,7 +419,7 @@ public class SystemRecord extends CobblerObject {
      * Getter for the virtual bridge property.
      *
      * @return the VirtBridge
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object (profile or image) or the settings.
      */
     public Optional<String> getVirtBridge() {
         return this.<String>retrieveOptionalValue(VIRT_BRIDGE);
@@ -432,16 +438,17 @@ public class SystemRecord extends CobblerObject {
      * Getter for the virtual CPU cores property.
      *
      * @return the VirtCpus
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object (profile or image) or the settings.
      */
     public Optional<Integer> getVirtCpus() {
         return this.<Integer>retrieveOptionalValue(VIRT_CPUS);
     }
 
     /**
-     * TODO
+     * Getter for the resolved value of the virtual CPU cores
      *
-     * @return TODO
+     * @return the VirtCpus
+     * @see #getVirtCpus()
      */
     public Integer getResolvedVirtCpus() {
         return (Integer) dataMapResolved.get(VIRT_CPUS);
@@ -451,16 +458,17 @@ public class SystemRecord extends CobblerObject {
      * Getter for the type of VM property.
      *
      * @return the VirtType
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object (profile or image) or the settings.
      */
     public Optional<String> getVirtType() {
         return this.<String>retrieveOptionalValue(VIRT_TYPE);
     }
 
     /**
-     * TODO
+     * Getter for the resolved type of VM
      *
-     * @return TODO
+     * @return the VirtType
+     * @see #getVirtType()
      */
     public String getResolvedVirtType() {
         return (String) dataMapResolved.get(VIRT_TYPE);
@@ -470,16 +478,17 @@ public class SystemRecord extends CobblerObject {
      * Getter for the virtual disk location property
      *
      * @return the VirtPath
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object (profile or image) or the settings.
      */
     public Optional<String> getVirtPath() {
         return this.<String>retrieveOptionalValue(VIRT_PATH);
     }
 
     /**
-     * TODO
+     * Getter for the resolved path of the virtual disk image
      *
-     * @return TODO
+     * @return the VirtPath
+     * @see #getVirtPath()
      */
     public String getResolvedVirtPath() {
         return (String) dataMapResolved.get(VIRT_PATH);
@@ -489,16 +498,17 @@ public class SystemRecord extends CobblerObject {
      * Getter for the virtual disk size property
      *
      * @return the VirtFileSize
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object (profile or image) or the settings.
      */
     public Optional<Double> getVirtFileSize() {
         return this.<Double>retrieveOptionalValue(VIRT_FILE_SIZE);
     }
 
     /**
-     * TODO
+     * Getter for the resolved value of the filesize of the virtual disk
      *
-     * @return TODO
+     * @return The filesize of the disk. Will inherit from the parent objects and settings.
+     * @see #getVirtFileSize()
      */
     public Double getResolvedVirtFileSize() {
         return (Double) dataMapResolved.get(VIRT_FILE_SIZE);
@@ -508,16 +518,17 @@ public class SystemRecord extends CobblerObject {
      * Getter for the virtual RAM property
      *
      * @return the VirtRam
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent object (profile or image) or the settings.
      */
     public Optional<Integer> getVirtRam() {
         return this.<Integer>retrieveOptionalValue(VIRT_RAM);
     }
 
     /**
-     * TODO
+     * Getter for the resolved virtual RAM property
      *
-     * @return TODO
+     * @return the VirtRam
+     * @see #getVirtRam()
      */
     public Integer getResolvedVirtRam() {
         return (Integer) dataMapResolved.get(VIRT_RAM);
@@ -525,7 +536,7 @@ public class SystemRecord extends CobblerObject {
 
     /**
      * true if netboot enabled is true
-     * false other wise
+     * false otherwise
      *
      * @return netboot enabled value
      */
@@ -535,9 +546,10 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the virtual bridge name of a virtual system
      *
      * @param virtBridgeIn the VirtBridge
+     * @see #getVirtBridge()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtBridge(Optional<String> virtBridgeIn) {
@@ -545,16 +557,17 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual bridge property
      *
      * @param virtBridgeIn the VirtBridge
+     * @see #getVirtBridge()
      */
     public void setResolvedVirtBridge(String virtBridgeIn) {
         modifyResolved(VIRT_BRIDGE, virtBridgeIn);
     }
 
     /**
-     * TODO
+     * Setter for the virtual CPU cores on a VM
      *
      * @param virtCpusIn the VirtCpus
      */
@@ -564,18 +577,20 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual CPU cores on a VM
      *
-     * @param virtCpusIn TODO
+     * @param virtCpusIn the VirtCpus
+     * @see #getVirtCpus()
      */
     public void setResolvedVirtCpus(Integer virtCpusIn) {
         modifyResolved(VIRT_CPUS, virtCpusIn);
     }
 
     /**
-     * TODO
+     * Setter for the raw virtual type of virtual machine
      *
      * @param virtTypeIn the VirtType
+     * @see #getVirtType()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtType(Optional<String> virtTypeIn) {
@@ -583,18 +598,20 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual type of virtual machine
      *
-     * @param virtTypeIn TODO
+     * @param virtTypeIn the VirtType
+     * @see #getVirtType()
      */
     public void setResolvedVirtType(String virtTypeIn) {
         modifyResolved(VIRT_TYPE, virtTypeIn);
     }
 
     /**
-     * TODO
+     * Setter for the raw virtual path to the disk image of a VM
      *
      * @param virtPathIn the VirtPath
+     * @see #getVirtPath()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtPath(Optional<String> virtPathIn) {
@@ -602,18 +619,20 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual path to the disk image of a VM
      *
-     * @param virtPathIn TODO
+     * @param virtPathIn the VirtPath
+     * @see #getVirtPath()
      */
     public void setResolvedVirtPath(String virtPathIn) {
         modifyResolved(VIRT_PATH, virtPathIn);
     }
 
     /**
-     * TODO
+     * Setter for the raw virtual disk file size
      *
      * @param virtFileSizeIn the VirtFileSize
+     * @see #getVirtFileSize()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtFileSize(Optional<Integer> virtFileSizeIn) {
@@ -621,18 +640,20 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual disk file size
      *
-     * @param virtFileSizeIn TODO
+     * @param virtFileSizeIn The new disk size
+     * @see #getVirtFileSize()
      */
     public void setResolvedVirtFileSize(Integer virtFileSizeIn) {
         modifyResolved(VIRT_FILE_SIZE, virtFileSizeIn);
     }
 
     /**
-     * TODO
+     * Setter for the RAM for a virtual machine
      *
-     * @param virtRamIn the VirtRam
+     * @param virtRamIn The new amount of RAM this is Integer is mapped to GB (not GiB).
+     * @see #getVirtRam()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtRam(Optional<Integer> virtRamIn) {
@@ -640,9 +661,10 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved RAM for a virtual machines
      *
-     * @param virtRamIn TODO
+     * @param virtRamIn The new amount of RAM this is Integer is mapped to GB (not GiB).
+     * @see #getVirtRam()
      */
     public void setResolvedVirtRam(Integer virtRamIn) {
         modifyResolved(VIRT_RAM, virtRamIn);
@@ -658,10 +680,10 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the name server property of a system
      *
      * @param nameServersIn the NameServers
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from the parent profile or the settings.
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setNameServers(Optional<List<String>> nameServersIn) {
@@ -673,16 +695,18 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved value of the name server property for a given system
      *
      * @param nameServersIn the NameServers
-     * @cobbler.inheritable TODO
+     * @see #setNameServers(Optional)
      */
     public void setResolvedNameServers(List<String> nameServersIn) {
         modifyResolved(NAME_SERVERS, nameServersIn);
     }
 
     /**
+     * Setter for the gateway for the system
+     *
      * @param gateway the Gateway
      */
     public void setGateway(String gateway) {
@@ -690,6 +714,8 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
+     * Setter for the hostname of the system
+     *
      * @param hostname the hostname
      */
     public void setHostName(String hostname) {
@@ -733,19 +759,21 @@ public class SystemRecord extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Getter for the server property
      *
-     * @return TODO
-     * @cobbler.inheritable TODO
+     * @return The server hostname or IP. If {@code Optional.emtpy()} is returned use {@link #getResolvedServer()} to
+     *         retrieve the final value for the object.
+     * @cobbler.inheritable This can be inherited either from a parent object or from the settings.
      */
     public Optional<String> getServer() {
         return this.<String>retrieveOptionalValue(SERVER);
     }
 
     /**
-     * TODO
+     * Getter for the server property
      *
-     * @return TODO
+     * @return The server hostname or IP
+     * @see #getServer()
      */
     public String getResolvedServer() {
         return (String) dataMapResolved.get(SERVER);
@@ -755,6 +783,7 @@ public class SystemRecord extends CobblerObject {
      * Sets the cobbler server host information for this system
      *
      * @param server the server host name.
+     * @see #getServer()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setServer(Optional<String> server) {
@@ -765,6 +794,7 @@ public class SystemRecord extends CobblerObject {
      * Sets the cobbler server host information for this system
      *
      * @param server the server host name.
+     * @see #getServer()
      */
     public void setResolvedServer(String server) {
         modifyResolved(SERVER, server);
@@ -851,7 +881,7 @@ public class SystemRecord extends CobblerObject {
      * Gets an additional ID for this system's power management system. The ID
      * is usually a type-specific identifier for the system or port to be
      * managed (eg. plug number on WTI, blade id on DRAC, etc.). See
-     * https://github.com/cobbler/cobbler/wiki/Power%20Management
+     * <a href="https://cobbler.readthedocs.io/en/latest/user-guide.html#power-management">RTFD - Power Management</a>
      *
      * @return the ID
      */

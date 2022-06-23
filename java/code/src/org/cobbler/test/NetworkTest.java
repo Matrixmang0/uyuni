@@ -46,6 +46,7 @@ public class NetworkTest {
         Network network = new Network(mockConnection, interfaceName);
 
         // Assert: If no exception is raised this is enough
+        Assertions.assertNotNull(network);
     }
 
     @Test
@@ -65,7 +66,7 @@ public class NetworkTest {
     public void testNetmask() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -80,7 +81,7 @@ public class NetworkTest {
     public void testIpAddress() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -95,7 +96,7 @@ public class NetworkTest {
     public void testIpv6Address() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -110,7 +111,7 @@ public class NetworkTest {
     public void testDnsName() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -125,7 +126,7 @@ public class NetworkTest {
     public void testIpv6Secondaries() {
         // Arrange
         String interfaceName = "eth0";
-        List<String> expectedResult = Arrays.asList("TODO", "second element");
+        List<String> expectedResult = Arrays.asList("not being validated", "second element");
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -155,7 +156,7 @@ public class NetworkTest {
     public void testMacAddress() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -170,7 +171,7 @@ public class NetworkTest {
     public void testBondingMaster() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act
@@ -185,7 +186,7 @@ public class NetworkTest {
     public void testBondingOptions() {
         // Arrange
         String interfaceName = "eth0";
-        String expectedResult = "TODO";
+        String expectedResult = "not being validated";
         Network network = new Network(mockConnection, interfaceName);
 
         // Act

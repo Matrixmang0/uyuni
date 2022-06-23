@@ -125,6 +125,7 @@ public class Image extends CobblerObject {
 
     /**
      * Handles lookups.
+     *
      * @param client a Cobbler connection
      * @param imageMap the image map
      * @return the image
@@ -239,6 +240,8 @@ public class Image extends CobblerObject {
     }
 
     /**
+     * Compares two objects with each another and returns true in case they are identical
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      * @param   other   the reference object with which to compare
      * @return  {@code true} if this object is the same as the obj
@@ -258,6 +261,8 @@ public class Image extends CobblerObject {
     }
 
     /**
+     * Generates the hash code for the object
+     *
      * @return  a hash code value for this object
      * @see java.lang.Object#hashCode()
      */

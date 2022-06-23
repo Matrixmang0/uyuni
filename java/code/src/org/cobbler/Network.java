@@ -144,6 +144,13 @@ public class Network {
         return inet;
     }
 
+    /**
+     * This helper method generates the XML-RPC Struct that Cobbler expects when having a network interface
+     *
+     * @param inet Map that contains the data in the Cobbler format.
+     * @param key The name of the property. Must be in the format {@code property-interfacename}.
+     * @param value The value for the property.
+     */
     private void addToMap(Map<String, Object> inet, String key, Object value) {
         // do not put null values and empty strings
         if (value != null && (!(value instanceof String) ||
@@ -188,6 +195,8 @@ public class Network {
     }
 
     /**
+     * Getter for the name of an interface
+     *
      * @return Returns the name.
      */
     public String getName() {
@@ -195,6 +204,8 @@ public class Network {
     }
 
     /**
+     * Getter for the network mask
+     *
      * @return Returns the netmask.
      */
     public String getNetmask() {
@@ -202,6 +213,8 @@ public class Network {
     }
 
     /**
+     * Setter for the network mask
+     *
      * @param netmaskIn The netmask to set.
      */
     public void setNetmask(String netmaskIn) {
@@ -209,6 +222,8 @@ public class Network {
     }
 
     /**
+     * Getter for the IPv4 address
+     *
      * @return Returns the ipAddress.
      */
     public String getIpAddress() {
@@ -216,6 +231,8 @@ public class Network {
     }
 
     /**
+     * Setter for the IPv4 address
+     *
      * @param ipAddressIn The ipAddress to set.
      */
     public void setIpAddress(String ipAddressIn) {
@@ -223,6 +240,8 @@ public class Network {
     }
 
     /**
+     * Getter for the IPv6 address
+     *
      * @return Returns the IPv6 address of the interface.
      */
     public String getIpv6Address() {
@@ -230,6 +249,8 @@ public class Network {
     }
 
     /**
+     * Setter for the IPv6 address
+     *
      * @param addressIn The IPv6 address to set.
      */
     public void setIpv6Address(String addressIn) {
@@ -237,6 +258,8 @@ public class Network {
     }
 
     /**
+     * Getter for the DNS name of the system
+     *
      * @return Returns the dnsname
      */
     public String getDnsname() {
@@ -244,6 +267,8 @@ public class Network {
     }
 
     /**
+     * Setter for the DNS name of the system
+     *
      * @param dnsnameIn The dnsname set.
      */
     public void setDnsname(String dnsnameIn) {
@@ -251,6 +276,8 @@ public class Network {
     }
 
     /**
+     * Getter for the IPv6 secondaries
+     *
      * @return Returns secondary IPv6 addresses of the interface.
      */
     public List<String> getIpv6Secondaries() {
@@ -258,6 +285,8 @@ public class Network {
     }
 
     /**
+     * Setter for the IPv6 secondaries
+     *
      * @param secondariesIn List of secondary IPv6 addresses to set.
      */
     public void setIpv6Secondaries(List<String> secondariesIn) {
@@ -265,6 +294,8 @@ public class Network {
     }
 
     /**
+     * Returns if the network is statically or dynamically (via DHCP) defined
+     *
      * @return Returns the isStatic.
      */
     public boolean isStaticNetwork() {
@@ -272,6 +303,8 @@ public class Network {
     }
 
     /**
+     * Sets if the network is statically defined or not
+     *
      * @param staticIn The isStatic to set.
      */
     public void setStaticNetwork(boolean staticIn) {
@@ -279,6 +312,8 @@ public class Network {
     }
 
     /**
+     * Getter for the MAC address of the system
+     *
      * @return Returns the macAddress.
      */
     public String getMacAddress() {
@@ -286,6 +321,8 @@ public class Network {
     }
 
     /**
+     * Setter for the MAC address of the system
+     *
      * @param macAddressIn The macAddress to set.
      */
     public void setMacAddress(String macAddressIn) {
@@ -293,6 +330,8 @@ public class Network {
     }
 
     /**
+     * Getter for the bonding master of the interface
+     *
      * @return Returns the bonding master.
      */
     public String getBondingMaster() {
@@ -300,6 +339,8 @@ public class Network {
     }
 
     /**
+     * Setter for the bonding master of the interface
+     *
      * @param bondingMasterIn the bondingMaster to set.
      */
     public void setBondingMaster(String bondingMasterIn) {
@@ -307,6 +348,8 @@ public class Network {
     }
 
     /**
+     * Getter for the bonding options
+     *
      * @return Returns the bonding options.
      */
     public String getBondingOptions() {
@@ -314,6 +357,8 @@ public class Network {
     }
 
     /**
+     * Setter for the bonding options
+     *
      * @param bondingOptionsIn the bondingOptions to set.
      */
     public void setBondingOptions(String bondingOptionsIn) {

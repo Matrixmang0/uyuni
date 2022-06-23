@@ -154,8 +154,15 @@ public class Profile extends CobblerObject {
                 "find_profile"));
     }
 
+    /**
+     * Handles lookups.
+     *
+     * @param client The Client that holds the connection to the Cobbler server
+     * @param profileMap The Key-Value Map with the content of the profile
+     * @return Either null or the profile that has been build by the Map
+     */
     @SuppressWarnings("unchecked")
-    private static Profile handleLookup(CobblerConnection client, Map profileMap) {
+    private static Profile handleLookup(CobblerConnection client, Map<String, Object> profileMap) {
         if (profileMap != null) {
             Profile profile = new Profile(client);
             profile.dataMap = profileMap;
@@ -176,6 +183,7 @@ public class Profile extends CobblerObject {
      * @param connection the cobbler connection
      * @return a list of profiles.
      */
+    @SuppressWarnings("unchecked")
     public static List<Profile> list(CobblerConnection connection) {
         List<Profile> profiles = new LinkedList<>();
         List<Map<String, Object>> cProfiles = (List<Map<String, Object>>)
@@ -203,6 +211,7 @@ public class Profile extends CobblerObject {
      * @param excludes   a list of cobbler ids to file on
      * @return a list of profiles.
      */
+    @SuppressWarnings("unchecked")
     public static List<Profile> list(CobblerConnection connection,
                                      Set<String> excludes) {
         List<Profile> profiles = new LinkedList<>();
@@ -307,7 +316,7 @@ public class Profile extends CobblerObject {
      * Getter for the virtual bridge property.
      *
      * @return the VirtBridge
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<String> getVirtBridge() {
         return this.<String>retrieveOptionalValue(VIRT_BRIDGE);
@@ -326,16 +335,17 @@ public class Profile extends CobblerObject {
      * Getter for the virtual CPU cores property.
      *
      * @return the VirtCpus
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<Integer> getVirtCpus() {
         return this.<Integer>retrieveOptionalValue(VIRT_CPUS);
     }
 
     /**
-     * TODO
+     * Getter for the resolved virtual CPU cores for a VM
      *
-     * @return TODO
+     * @return the VirtCpus
+     * @see #getVirtCpus()
      */
     public Integer getResolvedVirtCpus() {
         return (Integer) dataMapResolved.get(VIRT_CPUS);
@@ -345,24 +355,28 @@ public class Profile extends CobblerObject {
      * Getter for the type of VM property.
      *
      * @return the VirtType
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<String> getVirtType() {
         return this.<String>retrieveOptionalValue(VIRT_TYPE);
     }
 
     /**
-     * TODO
+     * Getter for the resolved type of VM
      *
-     * @return TODO
+     * @return the VirtType
+     * @see #getVirtType()
      */
     public String getResolvedVirtType() {
         return (String) dataMapResolved.get(VIRT_TYPE);
     }
 
     /**
+     * Getter for the repositories that a profile has assigned
+     *
      * @return the Repos
      */
+    @SuppressWarnings("unchecked")
     public List<String> getRepos() {
         return (List<String>) dataMap.get(REPOS);
     }
@@ -371,16 +385,17 @@ public class Profile extends CobblerObject {
      * Getter for the virtual disk location property
      *
      * @return the VirtPath
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<String> getVirtPath() {
         return this.<String>retrieveOptionalValue(VIRT_PATH);
     }
 
     /**
-     * TODO
+     * Getter for the resolved path of the virtual disk image
      *
-     * @return TODO
+     * @return the VirtPath
+     * @see #getVirtPath()
      */
     public String getResolvedVirtPath() {
         return (String) dataMapResolved.get(VIRT_PATH);
@@ -390,16 +405,17 @@ public class Profile extends CobblerObject {
      * Getter for the server property
      *
      * @return the Server
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<String> getServer() {
         return this.<String>retrieveOptionalValue(SERVER);
     }
 
     /**
-     * TODO
+     * Getter for the resolved server property
      *
-     * @return TODO
+     * @return The server hostname or IP
+     * @see #getServer()
      */
     public String getResolvedServer() {
         return (String) dataMapResolved.get(SERVER);
@@ -409,16 +425,17 @@ public class Profile extends CobblerObject {
      * Getter for the name servers property
      *
      * @return the NameServers
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<List<String>> getNameServers() {
         return this.<List<String>>retrieveOptionalValue(NAME_SERVERS);
     }
 
     /**
-     * TODO
+     * Getter for the resolved value of the name server for a profile
      *
-     * @return TODO
+     * @return The name servers combined from the Distro and Profile(s)
+     * @see #getNameServers()
      */
     @SuppressWarnings("unchecked")
     public List<String> getResolvedNameServer() {
@@ -426,9 +443,9 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the name servers
      *
-     * @param nameServersIn TODO
+     * @param nameServersIn The new value for the name servers
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setNameServers(Optional<List<String>> nameServersIn) {
@@ -436,36 +453,39 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved name servers of a profile
      *
-     * @param nameServersIn TODO
+     * @param nameServersIn The new value for the name server in Cobbler
+     * @see #getNameServers()
      */
     public void setResolvedNameServers(List<String> nameServersIn) {
         modifyResolved(NAME_SERVERS, nameServersIn);
     }
 
     /**
+     * If custom boot menus are enabled or the standard Cobbler hierarchy is used
+     *
      * @return true if menu enabled
      */
     public boolean menuEnabled() {
-        // FIXME: This will crash since we use real booleans in Cobbler now.
-        return 1 == (Integer) dataMap.get(ENABLE_MENU);
+        return (boolean) dataMap.get(ENABLE_MENU);
     }
 
     /**
      * Getter for the virtual disk size property
      *
      * @return the VirtFileSize
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<Double> getVirtFileSize() {
         return this.<Double>retrieveOptionalValue(VIRT_FILE_SIZE);
     }
 
     /**
-     * TODO
+     * Getter for the resolved value of the filesize of the virtual disk
      *
-     * @return TODO
+     * @return The filesize of the disk. Will inherit from the parent objects and settings.
+     * @see #getVirtFileSize()
      */
     public Double getResolvedVirtFileSize() {
         return (Double) dataMapResolved.get(VIRT_FILE_SIZE);
@@ -475,22 +495,25 @@ public class Profile extends CobblerObject {
      * Getter for the virtual RAM property
      *
      * @return the VirtRam
-     * @cobbler.inheritable TODO
+     * @cobbler.inheritable This can be inherited from a parent profile or the settings.
      */
     public Optional<Integer> getVirtRam() {
         return this.<Integer>retrieveOptionalValue(VIRT_RAM);
     }
 
     /**
-     * TODO
+     * Getter for the resolved virtual RAM property
      *
-     * @return TODO
+     * @return the VirtRam
+     * @see #getVirtRam()
      */
     public Integer getResolvedVirtRam() {
         return (Integer) dataMapResolved.get(VIRT_RAM);
     }
 
     /**
+     * Getter for the Distro object
+     *
      * @return the Distro
      */
     public Distro getDistro() {
@@ -499,6 +522,8 @@ public class Profile extends CobblerObject {
     }
 
     /**
+     * Setter for the DHCP Tag of the profile
+     *
      * @param dhcpTagIn the DhcpTag
      */
     public void setDhcpTag(String dhcpTagIn) {
@@ -515,7 +540,10 @@ public class Profile extends CobblerObject {
     }
 
     /**
+     * Setter for the virtual bridge name of a virtual system
+     *
      * @param virtBridgeIn the VirtBridge
+     * @see #getVirtBridge()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtBridge(Optional<String> virtBridgeIn) {
@@ -523,15 +551,18 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual bridge property
      *
-     * @param virtBridgeIn TODO
+     * @param virtBridgeIn the VirtBridge
+     * @see #getVirtBridge()
      */
     public void setResolvedVirtBridge(String virtBridgeIn) {
         modifyResolved(VIRT_BRIDGE, virtBridgeIn);
     }
 
     /**
+     * Setter for the virtual CPU cores on a VM
+     *
      * @param virtCpusIn the VirtCpus
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -540,18 +571,20 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual CPU cores on a VM
      *
-     * @param virtCpusIn TODO
+     * @param virtCpusIn the VirtCpus
+     * @see #getVirtCpus()
      */
     public void setResolvedVirtCpus(Integer virtCpusIn) {
         modifyResolved(VIRT_CPUS, virtCpusIn);
     }
 
     /**
-     * TODO
+     * Setter for the raw virtual type of virtual machine
      *
      * @param virtTypeIn the VirtType
+     * @see #getVirtType()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtType(Optional<String> virtTypeIn) {
@@ -559,9 +592,10 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual type of virtual machine
      *
-     * @param virtTypeIn TODO
+     * @param virtTypeIn the VirtType
+     * @see #getVirtType()
      */
     public void setResolvedVirtType(String virtTypeIn) {
         modifyResolved(VIRT_TYPE, virtTypeIn);
@@ -575,9 +609,10 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the raw virtual path to the disk image of a VM
      *
      * @param virtPathIn the VirtPath
+     * @see #getVirtPath()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtPath(Optional<String> virtPathIn) {
@@ -585,18 +620,20 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual path to the disk image of a VM
      *
-     * @param virtPathIn TODO
+     * @param virtPathIn the VirtPath
+     * @see #getVirtPath()
      */
     public void setResolvedVirtPath(String virtPathIn) {
         modifyResolved(VIRT_PATH, virtPathIn);
     }
 
     /**
-     * TODO
+     * Sets the cobbler server host information for this system
      *
      * @param serverIn the Server
+     * @see #getServer()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setServer(Optional<String> serverIn) {
@@ -604,9 +641,10 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Sets the cobbler server host information for this system
      *
-     * @param serverIn TODO
+     * @param serverIn the server host name.
+     * @see #getServer()
      */
     public void setResolvedServer(String serverIn) {
         modifyResolved(SERVER, serverIn);
@@ -620,9 +658,10 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the raw virtual disk file size
      *
      * @param virtFileSizeIn the VirtFileSize
+     * @see #getVirtFileSize()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtFileSize(Optional<Double> virtFileSizeIn) {
@@ -630,18 +669,20 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved virtual disk file size
      *
-     * @param virtFileSizeIn TODO
+     * @param virtFileSizeIn The new disk size
+     * @see #getVirtFileSize()
      */
     public void setResolvedVirtFileSize(Double virtFileSizeIn) {
         modifyResolved(VIRT_FILE_SIZE, virtFileSizeIn);
     }
 
     /**
-     * TODO
+     * Setter for the RAM for a virtual machine
      *
-     * @param virtRamIn the VirtRam
+     * @param virtRamIn The new amount of RAM this is Integer is mapped to GB (not GiB).
+     * @see #getVirtRam()
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public void setVirtRam(Optional<Integer> virtRamIn) {
@@ -649,15 +690,20 @@ public class Profile extends CobblerObject {
     }
 
     /**
-     * TODO
+     * Setter for the resolved RAM for a virtual machines
      *
-     * @param virtRamIn TODO
+     * @param virtRamIn The new amount of RAM this is Integer is mapped to GB (not GiB).
+     * @see #getVirtRam()
      */
     public void setResolvedVirtRam(Integer virtRamIn) {
         modifyResolved(VIRT_RAM, virtRamIn);
     }
 
     /**
+     * Setter for the distro of the profile
+     * <p>
+     * Wrapper for {@link #setDistro(String)} that does a null check on the Distro
+     *
      * @param distroIn the Distro
      */
     public void setDistro(Distro distroIn) {
@@ -670,6 +716,8 @@ public class Profile extends CobblerObject {
     }
 
     /**
+     * Setter for the distro of the profile
+     *
      * @param name the Distro name
      */
     public void setDistro(String name) {

@@ -24,7 +24,11 @@ package org.cobbler;
  */
 public class XmlRpcException extends RuntimeException {
     /**
-     * TODO
+     * This is important for serializing objects back into the memory in many cases. Define this to not use the default
+     * computation.
+     *
+     * @see <a href="https://stackoverflow.com/a/285809/4730773">Stackoverflow</a>
+     * @see java.io.Serializable
      */
     private static final long serialVersionUID = 1L;
 

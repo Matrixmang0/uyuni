@@ -198,6 +198,8 @@ public class Distro extends CobblerObject {
     }
 
     /**
+     * Getter for the distro architecture
+     *
      * @return the arch
      */
     public String getArch() {
@@ -206,6 +208,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the distro architecture
+     *
      * @param archIn the arch to set
      */
     public void setArch(String archIn) {
@@ -213,6 +217,8 @@ public class Distro extends CobblerObject {
     }
 
     /**
+     * Getter for the distro kernel path
+     *
      * @return the kernelPath
      */
     public String getKernel() {
@@ -221,6 +227,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the distro kernel path
+     *
      * @param kernelPathIn the kernelPath to set
      */
     public void setKernel(String kernelPathIn) {
@@ -229,6 +237,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Getter for the distro operating system version
+     *
      * @return the osVersion
      */
     public String getOsVersion() {
@@ -237,6 +247,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the distro operating system version
+     *
      * @param osVersionIn the osVersion to set
      */
     public void setOsVersion(String osVersionIn) {
@@ -245,6 +257,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Getter for the distro initrd path
+     *
      * @return the initrdPath
      */
     public String getInitrd() {
@@ -253,6 +267,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the distro initrd path
+     *
      * @param initrdPathIn the initrdPath to set
      */
     public void setInitrd(String initrdPathIn) {
@@ -261,6 +277,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Getter for the source repositories
+     *
      * @return the sourceRepos
      */
     public List<String> getSourceRepos() {
@@ -269,6 +287,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the source repositories
+     *
      * @param sourceReposIn the sourceRepos to set
      */
     public void setSourceRepos(List<String> sourceReposIn) {
@@ -276,6 +296,8 @@ public class Distro extends CobblerObject {
     }
 
     /**
+     * Getter for the Tree Build Time in Cobbler
+     *
      * @return the treeBuildTime
      */
     public long getTreeBuildTime() {
@@ -284,6 +306,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the Tree Build Time in Cobbler
+     *
      * @param treeBuildTimeIn the treeBuildTime to set
      */
     public void setTreeBuildTime(long treeBuildTimeIn) {
@@ -291,6 +315,8 @@ public class Distro extends CobblerObject {
     }
 
     /**
+     * Getter for the operating system breed
+     *
      * @return the breed
      */
     public String getBreed() {
@@ -299,6 +325,8 @@ public class Distro extends CobblerObject {
 
 
     /**
+     * Setter for the operating system breed
+     *
      * @param breedIn the breed to set
      */
     public void setBreed(String breedIn) {
@@ -308,7 +336,7 @@ public class Distro extends CobblerObject {
     /**
      * Builder to create a Distro
      *
-     * @param <T> TODO
+     * @param <T> This parameter decides if you will supply a String or Map to the kernel and post kernel options.
      */
     public static class Builder<T> {
 
