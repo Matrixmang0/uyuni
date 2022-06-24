@@ -56,7 +56,7 @@ public class SystemRecordTest {
     @BeforeEach
     public void setUp() throws Exception {
         connection = new MockConnection("http://localhost", "token");
-        Distro distro = new Distro.Builder()
+        Distro distro = new Distro.Builder<String>()
                 .setName("test-distro")
                 .setKernel("kernel")
                 .setInitrd("initrd")
@@ -117,9 +117,15 @@ public class SystemRecordTest {
      */
     @Test
     public void testSetGetPowerAddress() {
+        // Arrange
         String expected = TestUtils.randomString();
+
+        // Act
         system.setPowerAddress(expected);
-        assertEquals(expected, system.getPowerAddress());
+        String result = system.getPowerAddress();
+
+        // Assert
+        assertEquals(expected, result);
         assertSystemKeyEquals(expected, SystemRecord.POWER_ADDRESS);
     }
 
@@ -128,9 +134,15 @@ public class SystemRecordTest {
      */
     @Test
     public void testSetGetPowerUsername() {
+        // Arrange
         String expected = TestUtils.randomString();
+
+        // Act
         system.setPowerUsername(expected);
-        assertEquals(expected, system.getPowerUsername());
+        String result = system.getPowerUsername();
+
+        // Assert
+        assertEquals(expected, result);
         assertSystemKeyEquals(expected, SystemRecord.POWER_USERNAME);
     }
 
@@ -150,9 +162,15 @@ public class SystemRecordTest {
      */
     @Test
     public void testSetGetPowerId() {
+        // Arrange
         String expected = TestUtils.randomString();
+
+        // Act
         system.setPowerId(expected);
-        assertEquals(expected, system.getPowerId());
+        String result = system.getPowerId();
+
+        // Assert
+        assertEquals(expected, result);
         assertSystemKeyEquals(expected, SystemRecord.POWER_ID);
     }
 

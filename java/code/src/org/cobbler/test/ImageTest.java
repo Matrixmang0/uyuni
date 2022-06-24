@@ -124,8 +124,13 @@ public class ImageTest {
      */
     @Test
     public void testSetGetType() {
+        // Arrange
         String expected = Image.TYPE_DIRECT;
+
+        // Act
         image.setType(expected);
+
+        // Assert
         Assertions.assertEquals(expected, image.getType());
         assertImageKeyEquals(expected, Image.TYPE);
     }

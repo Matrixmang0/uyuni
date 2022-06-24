@@ -39,7 +39,12 @@ public class DistroTest {
         MockConnection.clear();
         client = new MockConnection("http://localhost", "token");
         String distroName = "testDistro";
-        testDistro = new Distro.Builder().setName(distroName).build(client);
+        testDistro = new Distro.Builder<String>()
+                .setName(distroName)
+                .setKernel("kernel")
+                .setInitrd("initrd")
+                .setArch("architecture")
+                .build(client);
     }
 
     @AfterEach
@@ -61,7 +66,7 @@ public class DistroTest {
         String arch = "i386";
 
         // Act
-        Distro newDistro = new Distro.Builder()
+        Distro newDistro = new Distro.Builder<String>()
                 .setName(name)
                 .setKernel(kernel)
                 .setInitrd(initrd)
@@ -129,8 +134,15 @@ public class DistroTest {
 
     @Test
     public void testComment() {
-        // TODO
-        Assertions.fail("Not implemented");
+        // Arrange
+        String expectedResult = "Testcomment";
+
+        // Act
+        testDistro.setComment(expectedResult);
+        String result = testDistro.getComment();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
     }
 
     @Test
@@ -147,8 +159,15 @@ public class DistroTest {
 
     @Test
     public void testName() {
-        // TODO
-        Assertions.fail("Not implemented");
+        // Arrange
+        String expectedResult = "testname";
+
+        // Act
+        testDistro.setName(expectedResult);
+        String result = testDistro.getName();
+
+        // Assert
+        Assertions.assertEquals(expectedResult, result);
     }
 
     @Test

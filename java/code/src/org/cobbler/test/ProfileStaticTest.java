@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProfileStaticTest {
 
@@ -43,7 +44,12 @@ public class ProfileStaticTest {
     public void testProfileCreate() {
         // Arrange
         String distroName = "testProfileCreate";
-        Distro testDistro = new Distro.Builder().setName(distroName).build(connectionMock);
+        Distro testDistro = new Distro.Builder<String>()
+                .setName(distroName)
+                .setKernel("kernel")
+                .setInitrd("initrd")
+                .setArch("arch")
+                .build(connectionMock);
 
         // Act
         Profile result = Profile.create(connectionMock, "", testDistro);
@@ -57,7 +63,12 @@ public class ProfileStaticTest {
         // Arrange
         String distroName = "testProfileCreate";
         String profileName = "testProfileCreate";
-        Distro testDistro = new Distro.Builder().setName(distroName).build(connectionMock);
+        Distro testDistro = new Distro.Builder<String>()
+                .setName(distroName)
+                .setKernel("kernel")
+                .setInitrd("initrd")
+                .setArch("arch")
+                .build(connectionMock);
         Profile testProfile = Profile.create(connectionMock, profileName, testDistro);
 
         // Act

@@ -35,7 +35,12 @@ public class ProfileTest {
     public void setUp() {
         String distroName = "testProfileTest";
         connectionMock = new MockConnection("http://localhost", "token");
-        testDistro = new Distro.Builder().setName(distroName).build(connectionMock);
+        testDistro = new Distro.Builder<String>()
+                .setName(distroName)
+                .setKernel("kernel")
+                .setInitrd("initrd")
+                .setArch("arch")
+                .build(connectionMock);
     }
 
     @AfterEach
