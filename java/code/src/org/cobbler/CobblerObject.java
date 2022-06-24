@@ -683,6 +683,7 @@ public abstract class CobblerObject {
         T kernelOptionsValue = kernelOptionsIn.get();
         if (kernelOptionsValue instanceof String || kernelOptionsValue instanceof Map) {
             modify(SET_KERNEL_OPTIONS, kernelOptionsValue);
+            return;
         }
         throw new IllegalArgumentException("Kernel Options must either be String or Map!");
     }
@@ -724,6 +725,7 @@ public abstract class CobblerObject {
         T kernelOptionsPostValue = kernelOptionsPostIn.get();
         if (kernelOptionsPostValue instanceof String || kernelOptionsPostValue instanceof Map) {
             modify(SET_KERNEL_OPTIONS_POST, kernelOptionsPostIn);
+            return;
         }
         throw new IllegalArgumentException("Kernel Options Post must either be String or Map!");
     }
