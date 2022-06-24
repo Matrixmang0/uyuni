@@ -17,6 +17,7 @@
  */
 package org.cobbler;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -344,14 +345,14 @@ public class Distro extends CobblerObject {
         private String kernel;
         private String initrd;
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        private Optional<Map<String, Object>> ksmeta;
+        private Optional<Map<String, Object>> ksmeta = Optional.empty();
         private String breed;
         private String osVersion;
         private String arch;
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        private Optional<T> kernelOptions;
+        private Optional<T> kernelOptions = Optional.empty();
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        private Optional<T> kernelOptionsPost;
+        private Optional<T> kernelOptionsPost = Optional.empty();
 
 
         /**
@@ -485,8 +486,11 @@ public class Distro extends CobblerObject {
             if (kernelOptions.isPresent()) {
                 distro.setKernelOptions(kernelOptions);
             }
-            if (kernelOptionsPost != null) {
+            if (kernelOptionsPost.isPresent()) {
                 distro.setKernelOptionsPost(kernelOptionsPost);
+            }
+            if (kernelOptionsPost.isEmpty()) {
+                distro.setKernelOptionsPost(Optional.of(new HashMap<String, Object>()));
             }
             distro.save();
             distro = lookupByName(connection, name);
