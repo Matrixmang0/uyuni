@@ -314,14 +314,35 @@ public abstract class CobblerObject {
     /**
      * This method modifies the object on Cobbler server side.
      *
-     * @param key   The property name. Normally this is one of the constants
-     *              defined above.
-     * @param value The new value for the property. This must be a "raw" object
-     *              value and not a resolved one.
+     * @param key   The property name. Normally this is one of the constants defined above.
+     * @param value The new value for the property. This must be a "raw" object value and not a resolved one.
      */
     protected void modify(String key, Object value) {
+        modify(key, value, true);
+    }
+
+    /**
+     * This method modifies the object on Cobbler server side.
+     *
+     * @param key   The property name. Normally this is one of the constants defined above.
+     * @param value The new value for the property. This must be a "raw" object value and not a resolved one.
+     * @param updateResolved Whether to update the resolved value in our internal Map. This should only be set to
+     *                       false if you create a new object.
+     */
+    protected void modify(String key, Object value, boolean updateResolved) {
         invokeModify(key, value);
         dataMap.put(key, value);
+        if (updateResolved) {
+            refreshResolved(key);
+        }
+    }
+
+    /**
+     * Refreshes the memory internal Map with the values from the server.
+     *
+     * @param key The key to update.
+     */
+    protected void refreshResolved(String key) {
         Object resolvedValue = client.invokeMethod("get_item_resolved_value", getUid(), key);
         dataMapResolved.put(key, resolvedValue);
     }

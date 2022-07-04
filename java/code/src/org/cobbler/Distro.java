@@ -466,10 +466,12 @@ public class Distro extends CobblerObject {
         public Distro build(CobblerConnection connection) {
             Distro distro = new Distro(connection);
             distro.handle = (String) connection.invokeTokenMethod("new_distro");
-            distro.modify(NAME, name);
-            distro.setKernel(kernel);
-            distro.setInitrd(initrd);
-            distro.setArch(arch);
+            distro.modify(NAME, name, false);
+            distro.modify(KERNEL, kernel, false);
+            distro.modify(INITRD, initrd, false);
+            distro.modify(ARCH, arch, false);
+            distro.save();
+            distro = lookupByName(connection, name);
 
             if (breed != null) {
                 distro.setBreed(breed);

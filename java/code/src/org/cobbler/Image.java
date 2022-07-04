@@ -59,6 +59,7 @@ public class Image extends CobblerObject {
 
     /**
      * Create a new image in Cobbler.
+     *
      * @param client a Cobbler connection
      * @param name the image name
      * @param type the image type
@@ -69,9 +70,9 @@ public class Image extends CobblerObject {
         String file) {
         Image image = new Image(client);
         image.handle = (String) client.invokeTokenMethod("new_image");
-        image.modify(NAME, name);
-        image.setType(type);
-        image.setFile(file);
+        image.modify(NAME, name, false);
+        image.modify(TYPE, type, false);
+        image.modify(FILE, file, false);
         image.save();
         image = lookupByName(client, name);
         return image;
@@ -170,7 +171,6 @@ public class Image extends CobblerObject {
      */
     public void setType(String typeIn) {
         modify(TYPE, typeIn);
-
     }
 
     /**

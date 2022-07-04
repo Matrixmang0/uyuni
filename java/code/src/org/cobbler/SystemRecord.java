@@ -146,8 +146,8 @@ public class SystemRecord extends CobblerObject {
                                       Profile profile) {
         SystemRecord sys = new SystemRecord(client);
         sys.handle = (String) client.invokeTokenMethod("new_system");
-        sys.modify(NAME, name);
-        sys.setProfile(profile);
+        sys.modify(NAME, name, false);
+        sys.modify(PROFILE, profile.getName(), false);
         sys.save();
         sys = lookupByName(client, name);
         return sys;
@@ -166,8 +166,8 @@ public class SystemRecord extends CobblerObject {
                                       Image image) {
         SystemRecord sys = new SystemRecord(client);
         sys.handle = (String) client.invokeTokenMethod("new_system");
-        sys.modify(NAME, name);
-        sys.setImage(image);
+        sys.modify(NAME, name, false);
+        sys.modify(IMAGE, image.getName(), false);
         sys.save();
         sys = lookupByName(client, name);
         return sys;

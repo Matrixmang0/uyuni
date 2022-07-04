@@ -121,8 +121,8 @@ public class Profile extends CobblerObject {
                                  String name, Distro distro) {
         Profile profile = new Profile(client);
         profile.handle = (String) client.invokeTokenMethod("new_profile");
-        profile.modify(NAME, name);
-        profile.setDistro(distro);
+        profile.modify(NAME, name, false);
+        profile.modify(DISTRO, distro.getName(), false);
         profile.save();
         profile = lookupByName(client, name);
         return profile;
