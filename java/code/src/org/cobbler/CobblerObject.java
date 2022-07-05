@@ -279,7 +279,7 @@ public abstract class CobblerObject {
             modify(key, INHERIT_KEY);
             return;
         }
-        modify(key, valueIn);
+        modify(key, valueIn.get());
     }
 
     /**
@@ -745,7 +745,7 @@ public abstract class CobblerObject {
         }
         T kernelOptionsPostValue = kernelOptionsPostIn.get();
         if (kernelOptionsPostValue instanceof String || kernelOptionsPostValue instanceof Map) {
-            modify(SET_KERNEL_OPTIONS_POST, kernelOptionsPostIn);
+            modify(SET_KERNEL_OPTIONS_POST, kernelOptionsPostValue);
             return;
         }
         throw new IllegalArgumentException("Kernel Options Post must either be String or Map!");

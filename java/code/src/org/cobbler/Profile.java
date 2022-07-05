@@ -654,7 +654,7 @@ public class Profile extends CobblerObject {
      * @param enableMenuIn the EnableMenu
      */
     public void setEnableMenu(boolean enableMenuIn) {
-        modify(ENABLE_MENU, enableMenuIn ? 1 : 0);
+        modify(ENABLE_MENU, enableMenuIn);
     }
 
     /**
